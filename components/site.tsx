@@ -15,7 +15,7 @@ const navItems = [
 export function Logo() {
   return (
     <Link href="/" aria-label="The Inner Arc home">
-      <img src="/images/logo-cream-on-dark.svg" alt="The Inner Arc" className="h-8 w-auto" />
+      <img src="/logo-cream-on-dark.svg" alt="The Inner Arc" className="h-8 w-auto" />
     </Link>
   )
 }
