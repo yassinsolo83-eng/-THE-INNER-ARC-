@@ -1,7 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 const navItems = [
   { href: '/about-tarot', label: 'About tarot' },
@@ -12,24 +14,35 @@ const navItems = [
 ]
 
 export function Logo() {
-  return <Link href="/" className="font-serif text-xl tracking-[0.18em] text-foreground" aria-label="The Inner Arc home">THE INNER ARC</Link>
+  return (
+    <Link href="/" aria-label="The Inner Arc home">
+      <Image src="/images/logo-cream-on-dark.svg" alt="The Inner Arc" width={200} height={40} className="h-8 w-auto" priority />
+    </Link>
+  )
 }
 
 export function Navbar() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-10">
         <Logo />
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
-          {navItems.map((item) => <Link key={item.href} href={item.href} className="text-sm text-muted-foreground transition-colors hover:text-accent">{item.label}</Link>)}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            return <Link key={item.href} href={item.href} className={`text-sm transition-colors hover:text-accent ${isActive ? 'text-accent border-b border-accent pb-0.5' : 'text-muted-foreground'}`}>{item.label}</Link>
+          })}
         </nav>
         <Link href="/services" className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5 md:inline-flex">Find your reading</Link>
         <button type="button" aria-expanded={open} aria-label="Toggle navigation" onClick={() => setOpen(!open)} className="text-accent md:hidden">
           <span className="block h-px w-6 bg-current" /><span className="mt-2 block h-px w-6 bg-current" />
         </button>
       </div>
-      {open && <nav className="border-t border-border/60 px-6 py-5 md:hidden" aria-label="Mobile navigation"><div className="flex flex-col gap-5">{navItems.map((item) => <Link onClick={() => setOpen(false)} key={item.href} href={item.href} className="text-sm text-muted-foreground">{item.label}</Link>)}<Link onClick={() => setOpen(false)} href="/services" className="text-sm font-medium text-accent">Find your reading →</Link></div></nav>}
+      {open && <nav className="border-t border-border/60 px-6 py-5 md:hidden" aria-label="Mobile navigation"><div className="flex flex-col gap-5">{navItems.map((item) => {
+        const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+        return <Link onClick={() => setOpen(false)} key={item.href} href={item.href} className={`text-sm ${isActive ? 'text-accent font-medium' : 'text-muted-foreground'}`}>{item.label}</Link>
+      })}<Link onClick={() => setOpen(false)} href="/services" className="text-sm font-medium text-accent">Find your reading →</Link></div></nav>}
     </header>
   )
 }
