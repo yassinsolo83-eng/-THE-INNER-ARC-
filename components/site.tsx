@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
@@ -16,7 +15,7 @@ const navItems = [
 export function Logo() {
   return (
     <Link href="/" aria-label="The Inner Arc home">
-      <Image src="/images/logo-cream-on-dark.svg" alt="The Inner Arc" width={200} height={40} className="h-8 w-auto" priority />
+      <img src="/images/logo-cream-on-dark.svg" alt="The Inner Arc" className="h-8 w-auto" />
     </Link>
   )
 }
