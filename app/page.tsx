@@ -14,7 +14,7 @@ export default async function Home() {
   return (
     <SiteShell>
       <main>
-        {/* ── Hero (fixed parallax) ────────────────────── */}
+        {/* ── Hero ──────────────────────────────────────── */}
         <section
           className="relative flex min-h-[620px] items-center justify-center border-b border-border/60 bg-cover bg-center bg-fixed lg:min-h-[700px]"
           style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
@@ -23,7 +23,7 @@ export default async function Home() {
           <div className="relative mx-auto max-w-7xl px-6 py-24 text-center lg:px-10">
             <div className="mx-auto max-w-3xl">
               <HeroEntrance delay={0}><p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p></HeroEntrance>
-              <HeroEntrance delay={200}><h1 className="font-serif text-6xl leading-[0.96] tracking-tight text-foreground md:text-8xl text-balance">Make room for what you already know.</h1></HeroEntrance>
+              <HeroEntrance delay={200}><h1 className="shimmer font-serif text-6xl leading-[0.96] tracking-tight md:text-8xl text-balance">Make room for what you already know.</h1></HeroEntrance>
               <HeroEntrance delay={400}><p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p></HeroEntrance>
               <HeroEntrance delay={600}>
                 <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
@@ -38,19 +38,19 @@ export default async function Home() {
         {/* ── Mirror ────────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <Reveal animation="fade-up"><SectionHeading eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
+            <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
             <Reveal animation="fade-left" delay={200}><div className="lg:justify-self-end"><ArrowLink href="/about-tarot">Learn more about tarot</ArrowLink></div></Reveal>
           </div>
         </section>
 
-        {/* ── Reading room (with images) ────────────────── */}
+        {/* ── Reading room (glow cards) ─────────────────── */}
         <section className="border-y border-border/60 bg-card">
           <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
             <Reveal animation="fade-up"><SectionHeading eyebrow="The reading room" title="Come as you are. Leave with a little more clarity." /></Reveal>
             <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {services.map((item, index) => (
                 <Reveal key={item.title} animation="fade-up" delay={index * 120}>
-                  <Link href="/services" className="group block overflow-hidden border border-border bg-card transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5">
+                  <Link href="/services" className="glow-card group block overflow-hidden border border-border bg-card transition-all duration-500">
                     <div className="relative aspect-[16/10] w-full overflow-hidden">
                       <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 50vw, 25vw" />
                       <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
@@ -72,7 +72,7 @@ export default async function Home() {
         {/* ── Kind words ────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
-            <Reveal animation="fade-up"><SectionHeading eyebrow="Kind words" title="A reading can become a new way of listening." /></Reveal>
+            <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="Kind words" title="A reading can become a new way of listening." /></Reveal>
             <div className="grid gap-6 md:grid-cols-2">
               {testimonials.map((t, i) => (
                 <Reveal key={i} animation="fade-up" delay={i * 150}>
@@ -86,7 +86,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Newsletter CTA (fixed parallax) ───────────── */}
+        {/* ── Newsletter CTA ────────────────────────────── */}
         <section
           className="relative min-h-[420px] bg-cover bg-center bg-fixed lg:min-h-[500px]"
           style={{ backgroundImage: 'url(/images/newsletter-cta.jpg)' }}
@@ -96,7 +96,7 @@ export default async function Home() {
             <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[500px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
               <div className="max-w-lg">
                 <p className="text-xs uppercase tracking-[0.25em] text-accent">Notes from the inner arc</p>
-                <h2 className="mt-3 font-serif text-5xl leading-tight text-foreground lg:text-6xl">A little perspective, occasionally.</h2>
+                <h2 className="shimmer mt-3 font-serif text-5xl leading-tight lg:text-6xl">A little perspective, occasionally.</h2>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground">Join our mailing list for reflections, card readings, and the occasional question worth sitting with.</p>
               </div>
               <div className="w-full max-w-md"><NewsletterForm /></div>

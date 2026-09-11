@@ -1,8 +1,6 @@
 import { sanityFetch } from '@/sanity/lib/fetch'
 import { servicesQuery, postsQuery, postBySlugQuery, testimonialsQuery } from '@/sanity/lib/queries'
 
-/* ── Static fallback data ──────────────────────────── */
-
 export const serviceItems = [
   { title: 'The Open Road', category: 'Life & direction', description: 'A spacious, 60-minute reading for the crossroads, patterns, and possibilities asking for your attention.', image: '/images/service-open-road.jpg' },
   { title: 'Two of Us', category: 'Love & relationships', description: 'A compassionate look at the dynamics, desires, and honest conversations shaping a connection.', image: '/images/services-card-linen.jpg' },
@@ -21,42 +19,15 @@ export const testimonials = [
   { quote: 'It felt grounded, generous, and strangely practical. I could feel my next step.', name: 'A.', context: 'The Open Road' },
 ]
 
-/* ── Sanity-first fetchers with static fallback ────── */
-
-export async function getServices() {
-  const data = await sanityFetch<typeof serviceItems>(servicesQuery)
-  return data?.length ? data : serviceItems
-}
-
+export async function getServices() { const d = await sanityFetch<typeof serviceItems>(servicesQuery); return d?.length ? d : serviceItems }
 export async function getPosts() {
-  const data = await sanityFetch<any[]>(postsQuery)
-  if (!data?.length) return posts
-  return data.map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    excerpt: p.excerpt,
-    date: p.date ? new Date(p.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '',
-    read: p.readTime || '',
-    cover: p.cover || '',
-    body: p.body || null,
-  }))
+  const d = await sanityFetch<any[]>(postsQuery)
+  if (!d?.length) return posts
+  return d.map(p => ({ slug: p.slug, title: p.title, excerpt: p.excerpt, date: p.date ? new Date(p.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '', read: p.readTime || '', cover: p.cover || '', body: p.body || null }))
 }
-
 export async function getPostBySlug(slug: string) {
-  const data = await sanityFetch<any>(postBySlugQuery, { slug })
-  if (data) return {
-    slug: data.slug,
-    title: data.title,
-    excerpt: data.excerpt,
-    date: data.date ? new Date(data.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '',
-    read: data.readTime || '',
-    cover: data.cover || '',
-    body: data.body || null,
-  }
-  return posts.find((p) => p.slug === slug) || null
+  const d = await sanityFetch<any>(postBySlugQuery, { slug })
+  if (d) return { slug: d.slug, title: d.title, excerpt: d.excerpt, date: d.date ? new Date(d.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '', read: d.readTime || '', cover: d.cover || '', body: d.body || null }
+  return posts.find(p => p.slug === slug) || null
 }
-
-export async function getTestimonials() {
-  const data = await sanityFetch<typeof testimonials>(testimonialsQuery)
-  return data?.length ? data : testimonials
-}
+export async function getTestimonials() { const d = await sanityFetch<typeof testimonials>(testimonialsQuery); return d?.length ? d : testimonials }
