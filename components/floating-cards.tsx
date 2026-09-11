@@ -45,12 +45,11 @@ export function FlippingDeck() {
   }, [])
 
   return (
-    <div aria-hidden className="relative mx-auto h-[440px] w-[300px] sm:h-[480px] sm:w-[330px]">
+    <div aria-hidden className="relative mx-auto h-[440px] w-[280px] max-w-full overflow-hidden sm:h-[480px] sm:w-[330px]">
       {deck.map((card, i) => {
         const dist = (i - front + deck.length) % deck.length
         const pos = positions[dist]
         const isFront = dist === 0
-        // When lifting, the front card floats up & fades before it wraps to back.
         const lift = isFront && lifting
         return (
           <div
@@ -67,7 +66,7 @@ export function FlippingDeck() {
           >
             <div className="rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.55)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={card.src} alt={card.alt} className="h-[340px] w-[217px] sm:h-[380px] sm:w-[242px]" />
+              <img src={card.src} alt={card.alt} className="h-[320px] w-[204px] sm:h-[360px] sm:w-[229px]" />
             </div>
           </div>
         )
