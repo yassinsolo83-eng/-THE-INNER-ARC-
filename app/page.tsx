@@ -96,19 +96,22 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Newsletter ────────────────────────────────── */}
-        <section className="relative border-t border-border/60">
+        {/* ── Newsletter CTA (full-bleed like Nefertiti) ── */}
+        <section className="relative min-h-[420px] overflow-hidden lg:min-h-[480px]">
           <div className="absolute inset-0">
-            <img src="/images/section-candle-tall.jpg" alt="" className="h-full w-full object-cover opacity-35" />
+            <img src="/images/newsletter-cta.jpg" alt="" className="h-full w-full object-cover" />
           </div>
-          <div className="absolute inset-0 bg-card/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30" />
           <Reveal animation="fade-up">
-            <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between lg:px-10">
-              <div>
+            <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[480px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
+              <div className="max-w-lg">
                 <p className="text-xs uppercase tracking-[0.25em] text-accent">Notes from the inner arc</p>
-                <h2 className="mt-3 font-serif text-4xl text-foreground">A little perspective, occasionally.</h2>
+                <h2 className="mt-3 font-serif text-5xl leading-tight text-foreground lg:text-6xl">A little perspective, occasionally.</h2>
+                <p className="mt-4 text-sm leading-7 text-muted-foreground">Join our mailing list for reflections, card readings, and the occasional question worth sitting with.</p>
               </div>
-              <NewsletterForm />
+              <div className="w-full max-w-md">
+                <NewsletterForm />
+              </div>
             </div>
           </Reveal>
         </section>
