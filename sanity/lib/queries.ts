@@ -1,17 +1,5 @@
-import { groq } from 'next-sanity'
-
-/* ── Site Settings ─────────────────────────────────── */
-export const siteSettingsQuery = groq`
-  *[_type == "siteSettings"][0]{
-    siteName,
-    tagline,
-    contactEmail,
-    "logo": logo.asset->url
-  }
-`
-
 /* ── Services ──────────────────────────────────────── */
-export const servicesQuery = groq`
+export const servicesQuery = `
   *[_type == "service"] | order(order asc){
     title,
     "slug": slug.current,
@@ -22,7 +10,7 @@ export const servicesQuery = groq`
 `
 
 /* ── Blog Posts ─────────────────────────────────────── */
-export const postsQuery = groq`
+export const postsQuery = `
   *[_type == "blogPost"] | order(publishedAt desc){
     title,
     "slug": slug.current,
@@ -34,7 +22,7 @@ export const postsQuery = groq`
   }
 `
 
-export const postBySlugQuery = groq`
+export const postBySlugQuery = `
   *[_type == "blogPost" && slug.current == $slug][0]{
     title,
     "slug": slug.current,
@@ -47,7 +35,7 @@ export const postBySlugQuery = groq`
 `
 
 /* ── Partners ──────────────────────────────────────── */
-export const partnersQuery = groq`
+export const partnersQuery = `
   *[_type == "partner"] | order(featured desc, name asc){
     name,
     "slug": slug.current,
@@ -63,7 +51,7 @@ export const partnersQuery = groq`
   }
 `
 
-export const partnerBySlugQuery = groq`
+export const partnerBySlugQuery = `
   *[_type == "partner" && slug.current == $slug][0]{
     name,
     "slug": slug.current,
@@ -80,24 +68,10 @@ export const partnerBySlugQuery = groq`
 `
 
 /* ── Testimonials ──────────────────────────────────── */
-export const testimonialsQuery = groq`
+export const testimonialsQuery = `
   *[_type == "testimonial"] | order(_createdAt asc){
     quote,
     name,
     context
-  }
-`
-
-/* ── About Page ────────────────────────────────────── */
-export const aboutPageQuery = groq`
-  *[_type == "aboutPage"][0]{
-    heroTitle,
-    heroSubtitle,
-    "heroImage": heroImage.asset->url,
-    sections[]{
-      heading,
-      body
-    },
-    sideQuote
   }
 `
