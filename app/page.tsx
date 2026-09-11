@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { ArrowLink, NewsletterForm, SectionHeading, SiteShell } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
-import { ParallaxImage } from '@/components/parallax-image'
 import { getServices, getTestimonials } from '@/lib/content'
 
 export const metadata = { title: 'The Inner Arc — Tarot for the questions that matter', description: 'Thoughtful tarot readings for reflection, direction, and the questions that stay with you.' }
@@ -14,12 +13,14 @@ export default async function Home() {
   return (
     <SiteShell>
       <main>
-        {/* ── Hero ──────────────────────────────────────── */}
-        <section className="relative overflow-hidden border-b border-border/60">
-          <ParallaxImage src="/images/hero-cards-candles.jpg" alt="" className="h-full w-full object-cover opacity-40" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background/90" />
-          <div className="relative mx-auto flex min-h-[620px] max-w-7xl items-center justify-center px-6 py-24 text-center lg:min-h-[700px] lg:px-10">
-            <div className="max-w-3xl">
+        {/* ── Hero (fixed parallax) ────────────────────── */}
+        <section
+          className="relative flex min-h-[620px] items-center justify-center border-b border-border/60 bg-cover bg-center bg-fixed lg:min-h-[700px]"
+          style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background" />
+          <div className="relative mx-auto max-w-7xl px-6 py-24 text-center lg:px-10">
+            <div className="mx-auto max-w-3xl">
               <HeroEntrance delay={0}>
                 <p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
               </HeroEntrance>
@@ -96,14 +97,14 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Newsletter CTA (full-bleed like Nefertiti) ── */}
-        <section className="relative min-h-[420px] overflow-hidden lg:min-h-[480px]">
-          <div className="absolute inset-0">
-            <img src="/images/newsletter-cta.jpg" alt="" className="h-full w-full object-cover" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/30" />
+        {/* ── Newsletter CTA (fixed parallax like Nefertiti) */}
+        <section
+          className="relative min-h-[420px] bg-cover bg-center bg-fixed lg:min-h-[500px]"
+          style={{ backgroundImage: 'url(/images/newsletter-cta.jpg)' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/65 to-transparent" />
           <Reveal animation="fade-up">
-            <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[480px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
+            <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[500px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
               <div className="max-w-lg">
                 <p className="text-xs uppercase tracking-[0.25em] text-accent">Notes from the inner arc</p>
                 <h2 className="mt-3 font-serif text-5xl leading-tight text-foreground lg:text-6xl">A little perspective, occasionally.</h2>
