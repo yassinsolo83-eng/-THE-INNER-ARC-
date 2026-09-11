@@ -45,7 +45,7 @@ export function FlippingDeck() {
   }, [])
 
   return (
-    <div aria-hidden className="relative mx-auto h-[440px] w-[280px] max-w-full overflow-hidden sm:h-[480px] sm:w-[330px]">
+    <div aria-hidden className="relative mx-auto h-[480px] w-[300px] max-w-full overflow-hidden sm:h-[560px] sm:w-[380px]">
       {deck.map((card, i) => {
         const dist = (i - front + deck.length) % deck.length
         const pos = positions[dist]
@@ -66,7 +66,7 @@ export function FlippingDeck() {
           >
             <div className="rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.55)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={card.src} alt={card.alt} className="h-[320px] w-[204px] sm:h-[360px] sm:w-[229px]" />
+              <img src={card.src} alt={card.alt} className="h-[360px] w-[229px] sm:h-[430px] sm:w-[274px]" />
             </div>
           </div>
         )
