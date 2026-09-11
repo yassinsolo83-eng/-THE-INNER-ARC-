@@ -72,7 +72,7 @@ export function AnimatedLogo({ variant = 'cream' }: { variant?: 'cream' | 'navy'
         height="45"
         viewBox="0 0 420 90"
         xmlns="http://www.w3.org/2000/svg"
-        className="h-8 w-auto"
+        className="h-11 w-auto"
         role="img"
         aria-label="The Inner Arc"
       >
