@@ -3,8 +3,7 @@ import { PartnerDirectory } from '@/components/partner-directory'
 import { SectionHeading, SiteShell } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
-import { getPartners } from '@/lib/partners'
-import { partnerFilters } from '@/lib/partners'
+import { getPartners, partnerFilters } from '@/lib/partners'
 
 export const metadata = { title: 'Our Readers — The Inner Arc', description: 'Meet the independent tarot readers in The Inner Arc community.' }
 
@@ -14,17 +13,26 @@ export default async function PartnersPage() {
   return (
     <SiteShell>
       <main>
-        <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-          <HeroEntrance>
-            <SectionHeading eyebrow="Our readers" title="People who listen well.">
-              <p>Our directory is a gathering of vetted, independent readers — thoughtful people with different practices, perspectives, and ways of making space for a question.</p>
-            </SectionHeading>
-          </HeroEntrance>
+        {/* ── Hero ──────────────────────────────────────── */}
+        <section
+          className="relative flex min-h-[400px] items-end bg-cover bg-center bg-fixed lg:min-h-[480px]"
+          style={{ backgroundImage: 'url(/images/service-open-road.jpg)' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+          <div className="relative mx-auto w-full max-w-7xl px-6 pb-16 lg:px-10">
+            <Link href="/" className="group mb-8 inline-flex items-center gap-2 text-sm text-accent"><span className="transition-transform duration-300 group-hover:-translate-x-1">←</span> Home</Link>
+            <HeroEntrance>
+              <SectionHeading eyebrow="Our readers" title="People who listen well.">
+                <p>Our directory is a gathering of vetted, independent readers — thoughtful people with different practices, perspectives, and ways of making space for a question.</p>
+              </SectionHeading>
+            </HeroEntrance>
+          </div>
+        </section>
 
-          <Reveal animation="fade-up" delay={300}>
-            <div className="mt-16">
-              <PartnerDirectory partners={allPartners} filters={partnerFilters} />
-            </div>
+        {/* ── Directory ─────────────────────────────────── */}
+        <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+          <Reveal animation="fade-up">
+            <PartnerDirectory partners={allPartners} filters={partnerFilters} />
           </Reveal>
 
           <Reveal animation="fade-up" delay={200}>
