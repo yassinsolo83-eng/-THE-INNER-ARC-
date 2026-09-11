@@ -99,9 +99,9 @@ export default async function Home() {
         {/* ── Newsletter ────────────────────────────────── */}
         <section className="relative border-t border-border/60">
           <div className="absolute inset-0">
-            <img src="/images/section-candle-tall.jpg" alt="" className="h-full w-full object-cover opacity-15" />
+            <img src="/images/section-candle-tall.jpg" alt="" className="h-full w-full object-cover opacity-35" />
           </div>
-          <div className="absolute inset-0 bg-card/85" />
+          <div className="absolute inset-0 bg-card/70" />
           <Reveal animation="fade-up">
             <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-6 py-20 lg:flex-row lg:items-center lg:justify-between lg:px-10">
               <div>
