@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-const stroke = '#B76E79'
+const stroke = '#D4AF6A'
 
 function CardFrame({ children }: { children: React.ReactNode }) {
   return (
