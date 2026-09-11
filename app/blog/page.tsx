@@ -14,9 +14,14 @@ export default async function Blog() {
     <SiteShell>
       <main className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
         <HeroEntrance>
+          <Link href="/" className="group mb-10 inline-flex items-center gap-2 text-sm text-accent">
+            <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span> Home
+          </Link>
+        </HeroEntrance>
+        <HeroEntrance delay={100}>
           <p className="text-xs uppercase tracking-[0.3em] text-accent">The journal</p>
         </HeroEntrance>
-        <HeroEntrance delay={150}>
+        <HeroEntrance delay={200}>
           <h1 className="mt-6 max-w-3xl font-serif text-6xl leading-none text-foreground md:text-8xl">Notes for the in-between.</h1>
         </HeroEntrance>
 
