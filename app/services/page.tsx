@@ -15,12 +15,17 @@ export default async function Services() {
       <main>
         <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <HeroEntrance>
+            <Link href="/" className="group mb-10 inline-flex items-center gap-2 text-sm text-accent">
+              <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span> Home
+            </Link>
+          </HeroEntrance>
+          <HeroEntrance delay={100}>
             <p className="text-xs uppercase tracking-[0.3em] text-accent">Choose your doorway</p>
           </HeroEntrance>
-          <HeroEntrance delay={150}>
+          <HeroEntrance delay={200}>
             <h1 className="mt-6 max-w-4xl font-serif text-6xl leading-none text-foreground md:text-8xl">A reading for the question underneath the question.</h1>
           </HeroEntrance>
-          <HeroEntrance delay={300}>
+          <HeroEntrance delay={350}>
             <p className="mt-8 max-w-xl text-lg leading-8 text-muted-foreground">Every session is a little different. Start with the theme that feels closest, and we&apos;ll make room for what emerges.</p>
           </HeroEntrance>
 
