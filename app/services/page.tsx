@@ -13,23 +13,23 @@ export default async function Services() {
   return (
     <SiteShell>
       <main>
-        <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-          <HeroEntrance>
-            <Link href="/" className="group mb-10 inline-flex items-center gap-2 text-sm text-accent">
-              <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span> Home
-            </Link>
-          </HeroEntrance>
-          <HeroEntrance delay={100}>
-            <p className="text-xs uppercase tracking-[0.3em] text-accent">Choose your doorway</p>
-          </HeroEntrance>
-          <HeroEntrance delay={200}>
-            <h1 className="mt-6 max-w-4xl font-serif text-6xl leading-none text-foreground md:text-8xl">A reading for the question underneath the question.</h1>
-          </HeroEntrance>
-          <HeroEntrance delay={350}>
-            <p className="mt-8 max-w-xl text-lg leading-8 text-muted-foreground">Every session is a little different. Start with the theme that feels closest, and we&apos;ll make room for what emerges.</p>
-          </HeroEntrance>
+        {/* ── Hero ──────────────────────────────────────── */}
+        <section
+          className="relative flex min-h-[400px] items-end bg-cover bg-center bg-fixed lg:min-h-[480px]"
+          style={{ backgroundImage: 'url(/images/services-fan-cards-black.jpg)' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+          <div className="relative mx-auto w-full max-w-7xl px-6 pb-16 lg:px-10">
+            <Link href="/" className="group mb-8 inline-flex items-center gap-2 text-sm text-accent"><span className="transition-transform duration-300 group-hover:-translate-x-1">←</span> Home</Link>
+            <HeroEntrance><p className="text-xs uppercase tracking-[0.3em] text-accent">Choose your doorway</p></HeroEntrance>
+            <HeroEntrance delay={150}><h1 className="mt-4 max-w-4xl font-serif text-5xl leading-none text-foreground md:text-7xl">A reading for the question underneath the question.</h1></HeroEntrance>
+            <HeroEntrance delay={300}><p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">Every session is a little different. Start with the theme that feels closest, and we&apos;ll make room for what emerges.</p></HeroEntrance>
+          </div>
+        </section>
 
-          <div className="mt-20 grid gap-6 md:grid-cols-2">
+        {/* ── Cards ─────────────────────────────────────── */}
+        <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+          <div className="grid gap-6 md:grid-cols-2">
             {services.map((item, index) => (
               <Reveal key={item.title} animation="fade-up" delay={index * 120}>
                 <article className="group border border-border overflow-hidden bg-card transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5">
@@ -47,7 +47,6 @@ export default async function Services() {
               </Reveal>
             ))}
           </div>
-
           <Reveal animation="fade-up" delay={500}>
             <div className="mt-20 border-t border-border pt-8">
               <p className="max-w-xl text-sm leading-7 text-muted-foreground">Not sure where to begin? Tell us what&apos;s on your mind and we&apos;ll point you toward a fitting format.</p>
