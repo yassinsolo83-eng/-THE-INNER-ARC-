@@ -7,7 +7,7 @@ const cormorant = Cormorant_Garamond({ subsets: ['latin'], variable: '--font-cor
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
-export const metadata: Metadata = { title: { default: 'The Inner Arc — Tarot for the questions that matter', template: '%s | The Inner Arc' }, description: 'Thoughtful tarot readings for reflection, direction, and the questions that stay with you.' }
+export const metadata: Metadata = { title: { default: 'The Inner Arc — Tarot for the questions that matter', template: '%s | The Inner Arc' }, description: 'Thoughtful tarot readings for reflection, direction, and the questions that stay with you.', icons: { icon: '/icon.svg', shortcut: '/icon.svg', apple: '/icon.svg' } }
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
