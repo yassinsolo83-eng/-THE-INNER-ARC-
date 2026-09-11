@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { Constellation } from './constellation'
+import { AnimatedLogo } from './animated-logo'
 
 const navItems = [
   { href: '/about-tarot', label: 'About tarot' },
@@ -20,11 +21,7 @@ function ScrollToTop() {
 }
 
 export function Logo() {
-  return (
-    <Link href="/" aria-label="The Inner Arc home">
-      <img src="/logo-cream-on-dark.svg" alt="The Inner Arc" className="h-8 w-auto" />
-    </Link>
-  )
+  return <AnimatedLogo variant="cream" />
 }
 
 export function Navbar() {
