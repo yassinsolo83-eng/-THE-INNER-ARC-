@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { Constellation } from './constellation'
 
 const navItems = [
   { href: '/about-tarot', label: 'About tarot' },
@@ -12,12 +13,9 @@ const navItems = [
   { href: '/contact', label: 'Contact' },
 ]
 
-/* ── Scroll to top on every route change ───────────── */
 function ScrollToTop() {
   const pathname = usePathname()
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-  }, [pathname])
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }) }, [pathname])
   return null
 }
 
@@ -58,11 +56,7 @@ export function Navbar() {
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative text-sm transition-colors duration-300 hover:text-accent ${isActive ? 'text-accent' : 'text-muted-foreground'}`}
-              >
+              <Link key={item.href} href={item.href} className={`relative text-sm transition-colors duration-300 hover:text-accent ${isActive ? 'text-accent' : 'text-muted-foreground'}`}>
                 {item.label}
                 {isActive && <span className="absolute -bottom-1 left-0 h-px w-full bg-accent" style={{ animation: 'expandWidth 0.3s ease-out forwards' }} />}
               </Link>
@@ -70,49 +64,24 @@ export function Navbar() {
           })}
         </nav>
         <Link href="/services" className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 md:inline-flex">Find your reading</Link>
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-label="Toggle navigation"
-          onClick={() => setOpen(!open)}
-          className="relative flex h-8 w-8 flex-col items-center justify-center gap-[6px] text-accent md:hidden"
-        >
+        <button type="button" aria-expanded={open} aria-label="Toggle navigation" onClick={() => setOpen(!open)} className="relative flex h-8 w-8 flex-col items-center justify-center gap-[6px] text-accent md:hidden">
           <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(45deg) translate(2.5px, 2.5px)' : 'none' }} />
           <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(-45deg) translate(2.5px, -2.5px)' : 'none' }} />
         </button>
       </div>
-      <div
-        className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden"
-        style={{ maxHeight: open ? '400px' : '0', opacity: open ? 1 : 0 }}
-      >
+      <div className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden" style={{ maxHeight: open ? '400px' : '0', opacity: open ? 1 : 0 }}>
         <nav className="border-t border-border/60 px-6 py-6" aria-label="Mobile navigation">
           <div className="flex flex-col gap-1">
             {navItems.map((item, i) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
+                <Link key={item.href} href={item.href} onClick={() => setOpen(false)}
                   className={`rounded-lg px-3 py-3 text-base transition-all duration-300 ${isActive ? 'bg-accent/10 text-accent font-medium' : 'text-muted-foreground hover:bg-accent/5 hover:text-foreground'}`}
-                  style={{
-                    transform: open ? 'none' : 'translateX(-20px)',
-                    opacity: open ? 1 : 0,
-                    transition: `all 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 60}ms`,
-                  }}
-                >
-                  {item.label}
-                </Link>
+                  style={{ transform: open ? 'none' : 'translateX(-20px)', opacity: open ? 1 : 0, transition: `all 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 60}ms` }}
+                >{item.label}</Link>
               )
             })}
-            <Link
-              href="/services"
-              onClick={() => setOpen(false)}
-              className="mt-3 rounded-full bg-primary px-6 py-3.5 text-center text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
-              style={{ opacity: open ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${navItems.length * 60}ms` }}
-            >
-              Find your reading
-            </Link>
+            <Link href="/services" onClick={() => setOpen(false)} className="mt-3 rounded-full bg-primary px-6 py-3.5 text-center text-sm font-medium text-primary-foreground" style={{ opacity: open ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${navItems.length * 60}ms` }}>Find your reading</Link>
           </div>
         </nav>
       </div>
@@ -140,17 +109,23 @@ export function Footer() {
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return <>
     <ScrollToTop />
-    <Navbar />
-    {children}
-    <Footer />
+    <Constellation />
+    <div className="relative z-10">
+      <Navbar />
+      {children}
+      <Footer />
+    </div>
   </>
 }
 
 export function SectionHeading({ eyebrow, title, children, align = 'left' }: { eyebrow?: string; title: string; children?: React.ReactNode; align?: 'left' | 'center' }) {
   return (
     <div className={`${align === 'center' ? 'mx-auto text-center' : ''} max-w-2xl`}>
-      <div className="mb-5 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-accent"><span className="h-px w-8 bg-accent" />{eyebrow || 'The inner arc'}</div>
-      <h2 className="font-serif text-4xl leading-tight tracking-tight text-foreground md:text-5xl text-balance">{title}</h2>
+      <div className="mb-5 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-accent">
+        <span className="glow-line h-px w-8" />
+        {eyebrow || 'The inner arc'}
+      </div>
+      <h2 className="shimmer-text font-serif text-4xl leading-tight tracking-tight md:text-5xl text-balance">{title}</h2>
       {children && <div className="mt-5 text-base leading-7 text-muted-foreground">{children}</div>}
     </div>
   )
