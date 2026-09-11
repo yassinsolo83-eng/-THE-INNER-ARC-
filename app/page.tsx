@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { ArrowLink, NewsletterForm, SectionHeading, SiteShell } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
+import { FloatingCards } from '@/components/floating-cards'
 import { getServices, getTestimonials } from '@/lib/content'
 
 export const metadata = { title: 'The Inner Arc — Tarot for the questions that matter', description: 'Thoughtful tarot readings for reflection, direction, and the questions that stay with you.' }
@@ -20,6 +21,7 @@ export default async function Home() {
           style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background" />
+          <FloatingCards />
           <div className="relative mx-auto max-w-7xl px-6 py-24 text-center lg:px-10">
             <div className="mx-auto max-w-3xl">
               <HeroEntrance delay={0}><p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p></HeroEntrance>
