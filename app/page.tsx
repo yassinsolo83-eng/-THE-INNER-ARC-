@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLink, NewsletterForm, SectionHeading, SiteShell } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
@@ -21,15 +22,9 @@ export default async function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/70 to-background" />
           <div className="relative mx-auto max-w-7xl px-6 py-24 text-center lg:px-10">
             <div className="mx-auto max-w-3xl">
-              <HeroEntrance delay={0}>
-                <p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
-              </HeroEntrance>
-              <HeroEntrance delay={200}>
-                <h1 className="font-serif text-6xl leading-[0.96] tracking-tight text-foreground md:text-8xl text-balance">Make room for what you already know.</h1>
-              </HeroEntrance>
-              <HeroEntrance delay={400}>
-                <p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p>
-              </HeroEntrance>
+              <HeroEntrance delay={0}><p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p></HeroEntrance>
+              <HeroEntrance delay={200}><h1 className="font-serif text-6xl leading-[0.96] tracking-tight text-foreground md:text-8xl text-balance">Make room for what you already know.</h1></HeroEntrance>
+              <HeroEntrance delay={400}><p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p></HeroEntrance>
               <HeroEntrance delay={600}>
                 <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
                   <Link href="/services" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Explore readings</Link>
@@ -40,50 +35,44 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Mirror section ────────────────────────────── */}
+        {/* ── Mirror ────────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <Reveal animation="fade-up">
-              <SectionHeading eyebrow="A different kind of reading" title="A mirror, not a map.">
-                Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.
-              </SectionHeading>
-            </Reveal>
-            <Reveal animation="fade-left" delay={200}>
-              <div className="lg:justify-self-end"><ArrowLink href="/about-tarot">Learn more about tarot</ArrowLink></div>
-            </Reveal>
+            <Reveal animation="fade-up"><SectionHeading eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
+            <Reveal animation="fade-left" delay={200}><div className="lg:justify-self-end"><ArrowLink href="/about-tarot">Learn more about tarot</ArrowLink></div></Reveal>
           </div>
         </section>
 
-        {/* ── Reading room ──────────────────────────────── */}
+        {/* ── Reading room (with images) ────────────────── */}
         <section className="border-y border-border/60 bg-card">
           <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-            <Reveal animation="fade-up">
-              <SectionHeading eyebrow="The reading room" title="Come as you are. Leave with a little more clarity." />
-            </Reveal>
-            <div className="mt-14 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
+            <Reveal animation="fade-up"><SectionHeading eyebrow="The reading room" title="Come as you are. Leave with a little more clarity." /></Reveal>
+            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {services.map((item, index) => (
                 <Reveal key={item.title} animation="fade-up" delay={index * 120}>
-                  <div className="h-full bg-card p-7 transition-colors duration-500 hover:bg-accent/5">
-                    <span className="font-mono text-xs text-accent">0{index + 1}</span>
-                    <h3 className="mt-16 font-serif text-2xl text-foreground">{item.title}</h3>
-                    <p className="mt-3 text-xs uppercase tracking-[0.16em] text-accent">{item.category}</p>
-                    <p className="mt-5 text-sm leading-6 text-muted-foreground">{item.description}</p>
-                  </div>
+                  <Link href="/services" className="group block overflow-hidden border border-border bg-card transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5">
+                    <div className="relative aspect-[16/10] w-full overflow-hidden">
+                      <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 50vw, 25vw" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                      <span className="absolute bottom-3 left-4 font-mono text-xs text-accent">0{index + 1}</span>
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-serif text-2xl text-foreground">{item.title}</h3>
+                      <p className="mt-2 text-xs uppercase tracking-[0.16em] text-accent">{item.category}</p>
+                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                    </div>
+                  </Link>
                 </Reveal>
               ))}
             </div>
-            <Reveal animation="fade-up" delay={500}>
-              <div className="mt-8"><ArrowLink href="/services">View all readings</ArrowLink></div>
-            </Reveal>
+            <Reveal animation="fade-up" delay={500}><div className="mt-8"><ArrowLink href="/services">View all readings</ArrowLink></div></Reveal>
           </div>
         </section>
 
         {/* ── Kind words ────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
-            <Reveal animation="fade-up">
-              <SectionHeading eyebrow="Kind words" title="A reading can become a new way of listening." />
-            </Reveal>
+            <Reveal animation="fade-up"><SectionHeading eyebrow="Kind words" title="A reading can become a new way of listening." /></Reveal>
             <div className="grid gap-6 md:grid-cols-2">
               {testimonials.map((t, i) => (
                 <Reveal key={i} animation="fade-up" delay={i * 150}>
@@ -97,7 +86,7 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* ── Newsletter CTA (fixed parallax like Nefertiti) */}
+        {/* ── Newsletter CTA (fixed parallax) ───────────── */}
         <section
           className="relative min-h-[420px] bg-cover bg-center bg-fixed lg:min-h-[500px]"
           style={{ backgroundImage: 'url(/images/newsletter-cta.jpg)' }}
@@ -110,9 +99,7 @@ export default async function Home() {
                 <h2 className="mt-3 font-serif text-5xl leading-tight text-foreground lg:text-6xl">A little perspective, occasionally.</h2>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground">Join our mailing list for reflections, card readings, and the occasional question worth sitting with.</p>
               </div>
-              <div className="w-full max-w-md">
-                <NewsletterForm />
-              </div>
+              <div className="w-full max-w-md"><NewsletterForm /></div>
             </div>
           </Reveal>
         </section>
