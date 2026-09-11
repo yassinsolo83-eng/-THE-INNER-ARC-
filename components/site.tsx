@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
 const navItems = [
@@ -11,6 +11,15 @@ const navItems = [
   { href: '/blog', label: 'Journal' },
   { href: '/contact', label: 'Contact' },
 ]
+
+/* ── Scroll to top on every route change ───────────── */
+function ScrollToTop() {
+  const pathname = usePathname()
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+  }, [pathname])
+  return null
+}
 
 export function Logo() {
   return (
@@ -32,7 +41,6 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close menu on route change
   useEffect(() => { setOpen(false) }, [pathname])
 
   return (
@@ -61,13 +69,7 @@ export function Navbar() {
             )
           })}
         </nav>
-        <Link
-          href="/services"
-          className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 md:inline-flex"
-        >
-          Find your reading
-        </Link>
-        {/* Mobile hamburger with animation */}
+        <Link href="/services" className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 md:inline-flex">Find your reading</Link>
         <button
           type="button"
           aria-expanded={open}
@@ -75,17 +77,10 @@ export function Navbar() {
           onClick={() => setOpen(!open)}
           className="relative flex h-8 w-8 flex-col items-center justify-center gap-[6px] text-accent md:hidden"
         >
-          <span
-            className="block h-px w-6 bg-current transition-all duration-300"
-            style={{ transform: open ? 'rotate(45deg) translate(2.5px, 2.5px)' : 'none' }}
-          />
-          <span
-            className="block h-px w-6 bg-current transition-all duration-300"
-            style={{ transform: open ? 'rotate(-45deg) translate(2.5px, -2.5px)' : 'none', opacity: open ? 1 : 1 }}
-          />
+          <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(45deg) translate(2.5px, 2.5px)' : 'none' }} />
+          <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(-45deg) translate(2.5px, -2.5px)' : 'none' }} />
         </button>
       </div>
-      {/* Mobile menu with smooth slide */}
       <div
         className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden"
         style={{ maxHeight: open ? '400px' : '0', opacity: open ? 1 : 0 }}
@@ -114,10 +109,7 @@ export function Navbar() {
               href="/services"
               onClick={() => setOpen(false)}
               className="mt-3 rounded-full bg-primary px-6 py-3.5 text-center text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5"
-              style={{
-                opacity: open ? 1 : 0,
-                transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${navItems.length * 60}ms`,
-              }}
+              style={{ opacity: open ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${navItems.length * 60}ms` }}
             >
               Find your reading
             </Link>
@@ -134,14 +126,10 @@ export function Footer() {
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-12 lg:flex-row lg:items-end lg:justify-between lg:px-10">
         <div>
           <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">
-            A thoughtful space for reflection, symbolism, and the questions that stay with you.
-          </p>
+          <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">A thoughtful space for reflection, symbolism, and the questions that stay with you.</p>
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors duration-300 hover:text-accent">{item.label}</Link>
-          ))}
+          {navItems.map((item) => (<Link key={item.href} href={item.href} className="transition-colors duration-300 hover:text-accent">{item.label}</Link>))}
           <span>© 2026 The Inner Arc</span>
         </div>
       </div>
@@ -150,16 +138,18 @@ export function Footer() {
 }
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
-  return <><Navbar />{children}<Footer /></>
+  return <>
+    <ScrollToTop />
+    <Navbar />
+    {children}
+    <Footer />
+  </>
 }
 
 export function SectionHeading({ eyebrow, title, children, align = 'left' }: { eyebrow?: string; title: string; children?: React.ReactNode; align?: 'left' | 'center' }) {
   return (
     <div className={`${align === 'center' ? 'mx-auto text-center' : ''} max-w-2xl`}>
-      <div className="mb-5 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-accent">
-        <span className="h-px w-8 bg-accent" />
-        {eyebrow || 'The inner arc'}
-      </div>
+      <div className="mb-5 flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-accent"><span className="h-px w-8 bg-accent" />{eyebrow || 'The inner arc'}</div>
       <h2 className="font-serif text-4xl leading-tight tracking-tight text-foreground md:text-5xl text-balance">{title}</h2>
       {children && <div className="mt-5 text-base leading-7 text-muted-foreground">{children}</div>}
     </div>
@@ -167,28 +157,15 @@ export function SectionHeading({ eyebrow, title, children, align = 'left' }: { e
 }
 
 export function ArrowLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link href={href} className="group inline-flex items-center gap-3 text-sm font-medium text-accent">
-      {children}
-      <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-    </Link>
-  )
+  return (<Link href={href} className="group inline-flex items-center gap-3 text-sm font-medium text-accent">{children}<span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span></Link>)
 }
 
 export function NewsletterForm() {
   return (
     <form className="flex w-full max-w-md flex-col gap-3 sm:flex-row" onSubmit={(e) => e.preventDefault()}>
       <label className="sr-only" htmlFor="newsletter-email">Email address</label>
-      <input
-        id="newsletter-email"
-        type="email"
-        required
-        placeholder="Your email address"
-        className="min-w-0 flex-1 rounded-full border border-border bg-background px-5 py-3 text-sm text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground focus:border-accent focus:shadow-[0_0_0_3px_rgba(212,165,165,0.1)]"
-      />
-      <button className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">
-        Join the list
-      </button>
+      <input id="newsletter-email" type="email" required placeholder="Your email address" className="min-w-0 flex-1 rounded-full border border-border bg-background px-5 py-3 text-sm text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground focus:border-accent focus:shadow-[0_0_0_3px_rgba(212,165,165,0.1)]" />
+      <button className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Join the list</button>
     </form>
   )
 }
