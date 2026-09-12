@@ -3,12 +3,15 @@ import { PartnerDirectory } from '@/components/partner-directory'
 import { SectionHeading, SiteShell } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
-import { getPartners, partnerFilters } from '@/lib/partners'
+import { getPartners, partnerFilters, getLiveDataForAllReaders } from '@/lib/partners'
 
 export const metadata = { title: 'Our Readers — The Inner Arc', description: 'Meet the independent tarot readers in The Inner Arc community.' }
 
 export default async function PartnersPage() {
-  const allPartners = await getPartners()
+  const [allPartners, liveData] = await Promise.all([
+    getPartners(),
+    getLiveDataForAllReaders(),
+  ])
 
   return (
     <SiteShell>
@@ -32,7 +35,7 @@ export default async function PartnersPage() {
         {/* ── Directory ─────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <Reveal animation="fade-up">
-            <PartnerDirectory partners={allPartners} filters={partnerFilters} />
+            <PartnerDirectory partners={allPartners} filters={partnerFilters} liveData={liveData} />
           </Reveal>
 
           <Reveal animation="fade-up" delay={200}>
