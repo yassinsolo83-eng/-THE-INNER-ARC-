@@ -4,7 +4,7 @@ import { SiteShell } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { getServices } from '@/lib/content'
-import { createServerClient } from '@/lib/supabase/server'
+import { createAnonClient } from '@/lib/supabase/server'
 
 export const metadata = {
   title: 'Readings — The Inner Arc',
@@ -22,7 +22,7 @@ type LiveServiceInfo = {
 
 async function getLiveServiceInfo(): Promise<Record<string, LiveServiceInfo>> {
   try {
-    const supabase = createServerClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('service_offerings_public')
       .select(

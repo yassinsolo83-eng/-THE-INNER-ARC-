@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Constellation } from './constellation'
 import { AnimatedLogo } from './animated-logo'
+import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 const navItems = [
   { href: '/about-tarot', label: 'About tarot' },
@@ -27,7 +28,18 @@ export function Logo() {
 export function Navbar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [user, setUser] = useState<any>(null)
   const pathname = usePathname()
+  const router = useRouter()
+
+  useEffect(() => {
+    const supabase = getSupabaseBrowserClient()
+    supabase.auth.getUser().then(({ data }: { data: any }) => setUser(data.user))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      setUser(session?.user ?? null)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -61,6 +73,11 @@ export function Navbar() {
           })}
         </nav>
         <Link href="/services" className="hidden rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 md:inline-flex">Find your reading</Link>
+        {user ? (
+          <Link href="/dashboard" className="hidden rounded-full border border-accent px-5 py-2.5 text-sm text-accent transition-all duration-300 hover:bg-accent hover:text-background md:inline-flex">Dashboard</Link>
+        ) : (
+          <Link href="/auth/login" className="hidden rounded-full border border-border px-5 py-2.5 text-sm text-muted-foreground transition-all duration-300 hover:border-accent hover:text-accent md:inline-flex">Sign in</Link>
+        )}
         <button type="button" aria-expanded={open} aria-label="Toggle navigation" onClick={() => setOpen(!open)} className="relative flex h-8 w-8 flex-col items-center justify-center gap-[6px] text-accent md:hidden">
           <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(45deg) translate(2.5px, 2.5px)' : 'none' }} />
           <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(-45deg) translate(2.5px, -2.5px)' : 'none' }} />
@@ -79,6 +96,11 @@ export function Navbar() {
               )
             })}
             <Link href="/services" onClick={() => setOpen(false)} className="mt-3 rounded-full bg-primary px-6 py-3.5 text-center text-sm font-medium text-primary-foreground" style={{ opacity: open ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${navItems.length * 60}ms` }}>Find your reading</Link>
+            {user ? (
+              <Link href="/dashboard" onClick={() => setOpen(false)} className="mt-2 rounded-full border border-accent px-6 py-3.5 text-center text-sm text-accent" style={{ opacity: open ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${(navItems.length + 1) * 60}ms` }}>Dashboard</Link>
+            ) : (
+              <Link href="/auth/login" onClick={() => setOpen(false)} className="mt-2 rounded-full border border-border px-6 py-3.5 text-center text-sm text-muted-foreground" style={{ opacity: open ? 1 : 0, transition: `opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${(navItems.length + 1) * 60}ms` }}>Sign in</Link>
+            )}
           </div>
         </nav>
       </div>

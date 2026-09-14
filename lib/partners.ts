@@ -1,6 +1,6 @@
 import { sanityFetch } from '@/sanity/lib/fetch'
 import { partnersQuery, partnerBySlugQuery } from '@/sanity/lib/queries'
-import { createServerClient } from '@/lib/supabase/server'
+import { createAnonClient } from '@/lib/supabase/server'
 
 // ── Types ──────────────────────────────────────────────────────────
 
@@ -89,7 +89,7 @@ export async function getPartnerBySlug(slug: string): Promise<Partner | null> {
 /** Fetch live data (ratings, availability status) for all approved readers. */
 export async function getLiveDataForAllReaders(): Promise<Record<string, PartnerLiveData>> {
   try {
-    const supabase = createServerClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('reader_public_profiles')
       .select('slug, rating_avg, rating_count, is_accepting_bookings, tier')
@@ -117,7 +117,7 @@ export async function getLiveDataForAllReaders(): Promise<Record<string, Partner
 /** Fetch live data for one reader by slug. */
 export async function getLiveDataForReader(slug: string): Promise<PartnerLiveData | null> {
   try {
-    const supabase = createServerClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('reader_public_profiles')
       .select('slug, rating_avg, rating_count, is_accepting_bookings, tier')
@@ -139,7 +139,7 @@ export async function getLiveDataForReader(slug: string): Promise<PartnerLiveDat
 /** Fetch the bookable service offerings for one reader (public view). */
 export async function getOfferingsForReader(readerSlug: string): Promise<ServiceOffering[]> {
   try {
-    const supabase = createServerClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('service_offerings_public')
       .select('*')
@@ -158,7 +158,7 @@ export async function getAvailableSlots(
   serviceTypeId: string
 ): Promise<AvailableSlot[]> {
   try {
-    const supabase = createServerClient()
+    const supabase = createAnonClient()
 
     // First get reader UUID from slug
     const { data: reader } = await supabase
