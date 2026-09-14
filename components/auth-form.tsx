@@ -14,10 +14,10 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
 
-  const supabase = getSupabaseBrowserClient()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const supabase = getSupabaseBrowserClient()
     setLoading(true)
     setError(null)
     setMessage(null)
@@ -50,6 +50,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   }
 
   async function handleGoogleLogin() {
+    const supabase = getSupabaseBrowserClient()
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
