@@ -15,7 +15,6 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
 
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const supabase = getSupabaseBrowserClient()
@@ -96,8 +95,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
           />
         </div>
 
-
-                <div>
+        <div>
           <label htmlFor="password" className="block text-xs uppercase tracking-[0.2em] text-accent">
             Password
           </label>
@@ -125,14 +123,6 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
               )}
             </button>
           </div>
-        </div>
-        required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
-            placeholder="At least 6 characters"
-          />
         </div>
 
         {error && (
