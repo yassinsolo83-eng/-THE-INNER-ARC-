@@ -17,7 +17,7 @@ export default async function Home() {
       <main>
         {/* ── Hero ──────────────────────────────────────── */}
         <section
-          className="relative flex min-h-[620px] items-center border-b border-transparent bg-cover bg-center bg-fixed lg:min-h-[700px]"
+          className="relative flex min-h-[620px] items-center bg-cover bg-center bg-fixed lg:min-h-[700px]"
           style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
@@ -52,7 +52,7 @@ export default async function Home() {
         </section>
 
         {/* ── Reading room (glow cards) ─────────────────── */}
-        <section className="border-y border-border/60 bg-card">
+        <section className="bg-card">
           <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
             <Reveal animation="fade-up"><SectionHeading eyebrow="The reading room" title="Come as you are. Leave with a little more clarity." /></Reveal>
             <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
