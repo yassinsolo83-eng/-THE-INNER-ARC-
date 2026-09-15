@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { ScrollToTop } from './scroll-to-top'
 import { Constellation } from './constellation'
 import { AnimatedLogo } from './animated-logo'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
