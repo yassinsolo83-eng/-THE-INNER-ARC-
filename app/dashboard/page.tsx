@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { SiteShell } from '@/components/site'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { Reveal } from '@/components/reveal'
+import { LogoutButton } from '@/components/logout-button'
 import { createServerClient } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Dashboard — The Inner Arc' }
@@ -12,7 +13,6 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  // Fetch profile, coin wallet, birth profile, and recent reports in parallel
   const [profileRes, walletRes, birthRes, reportsRes] = await Promise.all([
     supabase.from('profiles').select('first_name, full_name, role').eq('id', user.id).single(),
     supabase.from('coin_wallets').select('balance, lifetime_earned, lifetime_spent').eq('client_id', user.id).single(),
@@ -30,71 +30,84 @@ export default async function DashboardPage() {
     <SiteShell>
       <main className="mx-auto max-w-5xl px-6 py-20 lg:py-28">
         <HeroEntrance>
-          <p className="text-xs uppercase tracking-[0.3em] text-accent">Your space</p>
-          <h1 className="mt-4 font-serif text-5xl text-foreground">
-            Welcome, {displayName}
-          </h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-accent">Your space</p>
+              <h1 className="mt-4 font-serif text-5xl text-foreground">
+                Welcome, {displayName}
+              </h1>
+            </div>
+            <LogoutButton />
+          </div>
         </HeroEntrance>
 
-        {/* Quick stats */}
+        {/* Quick stats — equal height cards */}
         <div className="mt-12 grid gap-4 sm:grid-cols-3">
           <Reveal animation="fade-up" delay={100}>
-            <div className="border border-border bg-card p-6">
+            <div className="flex h-full flex-col justify-between border border-border bg-card p-6">
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Coin balance</p>
-              <p className="mt-2 font-serif text-4xl text-gold">{wallet?.balance ?? 0}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {wallet?.lifetime_earned ?? 0} earned · {wallet?.lifetime_spent ?? 0} spent
-              </p>
+              <div className="mt-3">
+                <p className="font-serif text-4xl text-gold">{wallet?.balance ?? 0}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {wallet?.lifetime_earned ?? 0} earned · {wallet?.lifetime_spent ?? 0} spent
+                </p>
+              </div>
             </div>
           </Reveal>
 
           <Reveal animation="fade-up" delay={200}>
-            <div className="border border-border bg-card p-6">
+            <div className="flex h-full flex-col justify-between border border-border bg-card p-6">
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Birth profile</p>
-              {birth ? (
-                <>
-                  <p className="mt-2 font-serif text-2xl text-foreground">{birth.zodiac_sign || 'Set up'}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Born {new Date(birth.birth_date).toLocaleDateString()}
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="mt-2 text-sm text-muted-foreground">Not set up yet</p>
-                  <Link href="/dashboard/birth-profile" className="mt-2 inline-block text-xs text-accent hover:underline">
-                    Add your birth details →
-                  </Link>
-                </>
-              )}
+              <div className="mt-3">
+                {birth ? (
+                  <>
+                    <p className="font-serif text-2xl text-foreground">{birth.zodiac_sign || 'Set up'}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Born {new Date(birth.birth_date).toLocaleDateString()}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted-foreground">Not set up yet</p>
+                    <Link href="/dashboard/birth-profile" className="mt-2 inline-block text-xs text-accent hover:underline">
+                      Add your birth details →
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
           </Reveal>
 
           <Reveal animation="fade-up" delay={300}>
-            <div className="border border-border bg-card p-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">AI Reports</p>
-              <p className="mt-2 font-serif text-4xl text-foreground">{reports.length}</p>
-              <Link href="/dashboard/ai-report" className="mt-2 inline-block text-xs text-accent hover:underline">
-                Generate a new report →
-              </Link>
+            <div className="flex h-full flex-col justify-between border border-border bg-card p-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">My readings</p>
+              <div className="mt-3">
+                <p className="font-serif text-4xl text-foreground">{reports.length}</p>
+                <Link href="/dashboard/reading" className="mt-2 inline-block text-xs text-accent hover:underline">
+                  Request a new reading →
+                </Link>
+              </div>
             </div>
           </Reveal>
         </div>
 
-        {/* Action cards */}
+        {/* Action cards — equal height */}
         <div className="mt-12 grid gap-4 sm:grid-cols-2">
           <Reveal animation="fade-up" delay={400}>
             <Link
-              href="/dashboard/ai-report"
-              className="group block border border-border bg-card p-8 transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5"
+              href="/dashboard/reading"
+              className="group flex h-full flex-col justify-between border border-border bg-card p-8 transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5"
             >
-              <span className="text-3xl">🌙</span>
-              <h2 className="mt-4 font-serif text-2xl text-foreground">Instant AI Reading</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Get an instant birth chart or zodiac report generated by AI.
-                {!birth && ' You\'ll need to add your birth details first.'}
-              </p>
+              <div>
+                <span className="text-3xl">🌙</span>
+                <h2 className="mt-4 font-serif text-2xl text-foreground">Personal Reading</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Get a personalized birth chart or zodiac report prepared by one of our specialists.
+                  {!birth && ' You\'ll need to add your birth details first.'}
+                </p>
+              </div>
               <p className="mt-4 text-xs text-accent transition-transform group-hover:translate-x-1">
-                {birth ? 'Generate now →' : 'Set up birth profile first →'}
+                {birth ? 'Request now →' : 'Set up birth profile first →'}
               </p>
             </Link>
           </Reveal>
@@ -102,15 +115,17 @@ export default async function DashboardPage() {
           <Reveal animation="fade-up" delay={500}>
             <Link
               href="/dashboard/birth-profile"
-              className="group block border border-border bg-card p-8 transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5"
+              className="group flex h-full flex-col justify-between border border-border bg-card p-8 transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5"
             >
-              <span className="text-3xl">♈</span>
-              <h2 className="mt-4 font-serif text-2xl text-foreground">Birth Profile</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {birth
-                  ? 'View or update your birth details for astrology services.'
-                  : 'Add your birth date, time, and location for personalized readings.'}
-              </p>
+              <div>
+                <span className="text-3xl">♈</span>
+                <h2 className="mt-4 font-serif text-2xl text-foreground">Birth Profile</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {birth
+                    ? 'View or update your birth details for personalized readings.'
+                    : 'Add your birth date, time, and location for personalized readings.'}
+                </p>
+              </div>
               <p className="mt-4 text-xs text-accent transition-transform group-hover:translate-x-1">
                 {birth ? 'Edit details →' : 'Add details →'}
               </p>
@@ -118,11 +133,11 @@ export default async function DashboardPage() {
           </Reveal>
         </div>
 
-        {/* Recent reports */}
+        {/* Recent readings */}
         {reports.length > 0 && (
           <Reveal animation="fade-up" delay={600}>
             <div className="mt-12">
-              <h2 className="text-xs uppercase tracking-[0.2em] text-accent">Recent reports</h2>
+              <h2 className="text-xs uppercase tracking-[0.2em] text-accent">Recent readings</h2>
               <div className="mt-4 divide-y divide-border border border-border">
                 {reports.map((r: any) => (
                   <div key={r.id} className="flex items-center justify-between p-4">
@@ -143,7 +158,7 @@ export default async function DashboardPage() {
                             : 'bg-yellow-950/60 text-yellow-400'
                       }`}
                     >
-                      {r.generation_status}
+                      {r.generation_status === 'completed' ? 'Ready' : r.generation_status === 'generating' ? 'In progress' : r.generation_status}
                     </span>
                   </div>
                 ))}
