@@ -86,7 +86,7 @@ export function Navbar() {
           <span className="block h-px w-6 bg-current transition-all duration-300" style={{ transform: open ? 'rotate(-45deg) translate(2.5px, -2.5px)' : 'none' }} />
         </button>
       </div>
-      <div className="overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden" style={{ maxHeight: open ? '400px' : '0', opacity: open ? 1 : 0 }}>
+      <div className="overflow-hidden bg-background transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden" style={{ maxHeight: open ? '500px' : '0', opacity: open ? 1 : 0 }}>
         <nav className="border-t border-border/60 px-6 py-6" aria-label="Mobile navigation">
           <div className="flex flex-col gap-1">
             {navItems.map((item, i) => {
