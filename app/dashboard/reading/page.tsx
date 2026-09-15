@@ -1,0 +1,172 @@
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { SiteShell } from '@/components/site'
+import { HeroEntrance } from '@/components/hero-entrance'
+import { Reveal } from '@/components/reveal'
+import { LogoutButton } from '@/components/logout-button'
+import { createServerClient } from '@/lib/supabase/server'
+
+export const metadata = { title: 'Dashboard — The Inner Arc' }
+
+export default async function DashboardPage() {
+  const supabase = await createServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/auth/login')
+
+  const [profileRes, walletRes, birthRes, reportsRes] = await Promise.all([
+    supabase.from('profiles').select('first_name, full_name, role').eq('id', user.id).single(),
+    supabase.from('coin_wallets').select('balance, lifetime_earned, lifetime_spent').eq('client_id', user.id).single(),
+    supabase.from('client_birth_profiles').select('birth_date, zodiac_sign').eq('client_id', user.id).single(),
+    supabase.from('ai_reports').select('id, report_type, generation_status, created_at').eq('client_id', user.id).order('created_at', { ascending: false }).limit(5),
+  ])
+
+  const profile = profileRes.data
+  const wallet = walletRes.data
+  const birth = birthRes.data
+  const reports = reportsRes.data || []
+  const displayName = profile?.first_name || profile?.full_name?.split(' ')[0] || 'there'
+
+  return (
+    <SiteShell>
+      <main className="mx-auto max-w-5xl px-6 py-20 lg:py-28">
+        <HeroEntrance>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-accent">Your space</p>
+              <h1 className="mt-4 font-serif text-5xl text-foreground">
+                Welcome, {displayName}
+              </h1>
+            </div>
+            <LogoutButton />
+          </div>
+        </HeroEntrance>
+
+        {/* Quick stats — equal height cards */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-3">
+          <Reveal animation="fade-up" delay={100}>
+            <div className="flex h-full flex-col justify-between border border-border bg-card p-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Coin balance</p>
+              <div className="mt-3">
+                <p className="font-serif text-4xl text-gold">{wallet?.balance ?? 0}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {wallet?.lifetime_earned ?? 0} earned · {wallet?.lifetime_spent ?? 0} spent
+                </p>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal animation="fade-up" delay={200}>
+            <div className="flex h-full flex-col justify-between border border-border bg-card p-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Birth profile</p>
+              <div className="mt-3">
+                {birth ? (
+                  <>
+                    <p className="font-serif text-2xl text-foreground">{birth.zodiac_sign || 'Set up'}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Born {new Date(birth.birth_date).toLocaleDateString()}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted-foreground">Not set up yet</p>
+                    <Link href="/dashboard/birth-profile" className="mt-2 inline-block text-xs text-accent hover:underline">
+                      Add your birth details →
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal animation="fade-up" delay={300}>
+            <div className="flex h-full flex-col justify-between border border-border bg-card p-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">My readings</p>
+              <div className="mt-3">
+                <p className="font-serif text-4xl text-foreground">{reports.length}</p>
+                <Link href="/dashboard/reading" className="mt-2 inline-block text-xs text-accent hover:underline">
+                  Request a new reading →
+                </Link>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Action cards — equal height */}
+        <div className="mt-12 grid gap-4 sm:grid-cols-2">
+          <Reveal animation="fade-up" delay={400}>
+            <Link
+              href="/dashboard/reading"
+              className="group flex h-full flex-col justify-between border border-border bg-card p-8 transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5"
+            >
+              <div>
+                <span className="text-3xl">🌙</span>
+                <h2 className="mt-4 font-serif text-2xl text-foreground">Personal Reading</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Get a personalized birth chart or zodiac report prepared by one of our specialists.
+                  {!birth && ' You\'ll need to add your birth details first.'}
+                </p>
+              </div>
+              <p className="mt-4 text-xs text-accent transition-transform group-hover:translate-x-1">
+                {birth ? 'Request now →' : 'Set up birth profile first →'}
+              </p>
+            </Link>
+          </Reveal>
+
+          <Reveal animation="fade-up" delay={500}>
+            <Link
+              href="/dashboard/birth-profile"
+              className="group flex h-full flex-col justify-between border border-border bg-card p-8 transition-all duration-500 hover:border-accent/40 hover:shadow-xl hover:shadow-accent/5"
+            >
+              <div>
+                <span className="text-3xl">♈</span>
+                <h2 className="mt-4 font-serif text-2xl text-foreground">Birth Profile</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {birth
+                    ? 'View or update your birth details for personalized readings.'
+                    : 'Add your birth date, time, and location for personalized readings.'}
+                </p>
+              </div>
+              <p className="mt-4 text-xs text-accent transition-transform group-hover:translate-x-1">
+                {birth ? 'Edit details →' : 'Add details →'}
+              </p>
+            </Link>
+          </Reveal>
+        </div>
+
+        {/* Recent readings */}
+        {reports.length > 0 && (
+          <Reveal animation="fade-up" delay={600}>
+            <div className="mt-12">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-accent">Recent readings</h2>
+              <div className="mt-4 divide-y divide-border border border-border">
+                {reports.map((r: any) => (
+                  <div key={r.id} className="flex items-center justify-between p-4">
+                    <div>
+                      <p className="text-sm text-foreground capitalize">
+                        {r.report_type.replace(/_/g, ' ')}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(r.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        r.generation_status === 'completed'
+                          ? 'bg-emerald-950/60 text-emerald-400'
+                          : r.generation_status === 'failed'
+                            ? 'bg-red-950/60 text-red-400'
+                            : 'bg-yellow-950/60 text-yellow-400'
+                      }`}
+                    >
+                      {r.generation_status === 'completed' ? 'Ready' : r.generation_status === 'generating' ? 'In progress' : r.generation_status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+        )}
+      </main>
+    </SiteShell>
+  )
+}
