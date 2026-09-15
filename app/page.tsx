@@ -17,7 +17,7 @@ export default async function Home() {
       <main>
         {/* ── Hero ──────────────────────────────────────── */}
         <section
-          className="relative flex min-h-[620px] items-center border-b border-border/60 bg-cover bg-center bg-fixed lg:min-h-[700px]"
+          className="relative flex min-h-[620px] items-center border-b border-transparent bg-cover bg-center bg-fixed lg:min-h-[700px]"
           style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
