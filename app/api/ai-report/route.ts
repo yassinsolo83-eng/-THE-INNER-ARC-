@@ -113,16 +113,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to charge coins' }, { status: 400 })
     }
 
-    // Call Z.ai API to generate the report
+    // Call Groq API to generate the report
     try {
-      const aiResponse = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
+      const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.ZAI_API_KEY || ''}`,
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY || ''}`,
         },
         body: JSON.stringify({
-          model: 'glm-4-flash',
+          model: 'llama-3.3-70b-versatile',
           max_tokens: 4000,
           messages: [
             { role: 'user', content: buildPrompt(report_type, birth) },
@@ -131,8 +131,11 @@ export async function POST(request: Request) {
       })
 
       const aiData = await aiResponse.json()
-      
-      // Z.ai uses OpenAI-compatible format
+
+      if (!aiResponse.ok) {
+        throw new Error(aiData?.error?.message || 'API request failed')
+      }
+
       const content = aiData.choices?.[0]?.message?.content || ''
 
       if (!content) throw new Error('Empty response')
@@ -145,7 +148,7 @@ export async function POST(request: Request) {
       await admin.from('ai_reports').update({
         content_en: contentEn,
         content_ar: contentAr || null,
-        model_used: 'glm-4-flash',
+        model_used: 'llama-3.3-70b-versatile',
         generation_status: 'completed',
         generated_at: new Date().toISOString(),
       }).eq('id', report.id)
