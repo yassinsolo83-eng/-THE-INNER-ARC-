@@ -4,6 +4,7 @@ import { SiteShell } from '@/components/site'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { Reveal } from '@/components/reveal'
 import { LogoutButton } from '@/components/logout-button'
+import { PromoCodeInput } from '@/components/promo-code-input'
 import { createServerClient } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Dashboard — The Inner Arc' }
@@ -132,6 +133,13 @@ export default async function DashboardPage() {
             </Link>
           </Reveal>
         </div>
+
+        {/* Promo code */}
+        <Reveal animation="fade-up" delay={550}>
+          <div className="mt-8">
+            <PromoCodeInput />
+          </div>
+        </Reveal>
 
         {/* Recent readings */}
         {reports.length > 0 && (
