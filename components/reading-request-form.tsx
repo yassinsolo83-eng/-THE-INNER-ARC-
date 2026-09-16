@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const READING_TYPES = [
   { key: 'birth_chart', name: 'Birth Chart Analysis', cost: 25, icon: '🌙', desc: 'A comprehensive natal chart covering your personality, planetary placements, and life themes.' },
@@ -10,18 +11,16 @@ const READING_TYPES = [
 ]
 
 export function ReadingRequestForm({ coinBalance }: { coinBalance: number }) {
+  const router = useRouter()
   const [selected, setSelected] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [report, setReport] = useState<{ content_en: string; content_ar: string } | null>(null)
   const [submitted, setSubmitted] = useState(false)
-  const [lang, setLang] = useState<'en' | 'ar'>('en')
 
   async function handleRequest() {
     if (!selected) return
     setLoading(true)
     setError(null)
-    setSubmitted(false)
 
     try {
       const res = await fetch('/api/ai-report', {
@@ -33,13 +32,7 @@ export function ReadingRequestForm({ coinBalance }: { coinBalance: number }) {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to submit request')
 
-      // Show "preparing" state first
       setSubmitted(true)
-
-      // After a brief moment, reveal the reading
-      setTimeout(() => {
-        setReport({ content_en: data.content_en, content_ar: data.content_ar })
-      }, 3000)
     } catch (err: any) {
       setError(err?.message || 'Something went wrong')
     } finally {
@@ -49,64 +42,20 @@ export function ReadingRequestForm({ coinBalance }: { coinBalance: number }) {
 
   const selectedType = READING_TYPES.find((t) => t.key === selected)
 
-  // Show the "preparing" message
-  if (submitted && !report) {
+  if (submitted) {
     return (
       <div className="border border-border bg-card p-8 text-center">
-        <div className="mx-auto h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
-        <h2 className="mt-6 font-serif text-2xl text-foreground">Your reading is being prepared</h2>
+        <span className="text-5xl">✨</span>
+        <h2 className="mt-6 font-serif text-2xl text-foreground">Your reading has been requested</h2>
         <p className="mt-3 text-sm text-muted-foreground">
           One of our specialists is preparing your {selectedType?.name?.toLowerCase()}.
-          This usually takes 5–10 minutes.
+          This usually takes 5–10 minutes. You will find it in your dashboard once ready.
         </p>
-        <p className="mt-2 text-xs text-muted-foreground">
-          You&apos;ll find it in your dashboard once it&apos;s ready.
-        </p>
-      </div>
-    )
-  }
-
-  // Show the reading once ready
-  if (report) {
-    const content = lang === 'ar' && report.content_ar ? report.content_ar : report.content_en
-    return (
-      <div>
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-serif text-2xl text-foreground">{selectedType?.name}</h2>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setLang('en')}
-              className={`rounded-full px-3 py-1 text-xs transition-colors ${lang === 'en' ? 'bg-accent text-background' : 'border border-border text-muted-foreground'}`}
-            >
-              English
-            </button>
-            {report.content_ar && (
-              <button
-                onClick={() => setLang('ar')}
-                className={`rounded-full px-3 py-1 text-xs transition-colors ${lang === 'ar' ? 'bg-accent text-background' : 'border border-border text-muted-foreground'}`}
-              >
-                عربي
-              </button>
-            )}
-          </div>
-        </div>
-        <div
-          className="border border-border bg-card p-6 sm:p-8"
-          dir={lang === 'ar' ? 'rtl' : 'ltr'}
-        >
-          <div className="max-w-none text-sm leading-7 text-muted-foreground">
-            {content.split('\n').map((p, i) => (
-              <p key={i} className={`${p.startsWith('#') ? 'font-serif text-xl text-foreground mt-6' : 'mt-3'}`}>
-                {p.replace(/^#+\s*/, '')}
-              </p>
-            ))}
-          </div>
-        </div>
         <button
-          onClick={() => { setReport(null); setSelected(null); setSubmitted(false) }}
-          className="mt-6 text-sm text-accent hover:underline"
+          onClick={() => router.push('/dashboard')}
+          className="mt-6 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg"
         >
-          ← Request another reading
+          Back to Dashboard
         </button>
       </div>
     )
@@ -165,7 +114,7 @@ export function ReadingRequestForm({ coinBalance }: { coinBalance: number }) {
           {loading ? (
             <span className="inline-flex items-center gap-2">
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-              Submitting your request...
+              Submitting...
             </span>
           ) : (
             `Request ${selectedType?.name} (${selectedType?.cost} coins)`
