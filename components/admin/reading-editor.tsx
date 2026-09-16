@@ -48,9 +48,15 @@ export function ReadingEditor({ initialReports }: { initialReports: any[] }) {
     }
   }
 
-  function formatBirthData(data: any) {
-    if (!data) return 'No birth data'
-    return `${data.birth_date || '?'} · ${data.birth_time || 'Time unknown'} · ${data.birth_city || '?'}, ${data.birth_country || '?'} · ${data.zodiac_sign || '?'}`
+  function formatInputData(data: any) {
+    if (!data) return null
+    return {
+      birth: `${data.birth_date || '?'} · ${data.birth_time || 'Time unknown'} · ${data.birth_city || '?'}, ${data.birth_country || '?'}`,
+      sign: data.zodiac_sign || '?',
+      gender: data.gender || 'Not specified',
+      question: data.question || 'No specific question',
+      partner: data.partner ? `${data.partner.name || 'Unknown'} · Born: ${data.partner.birth_date || '?'} · Sign: ${data.partner.sign || '?'}` : null,
+    }
   }
 
   return (
@@ -70,79 +76,98 @@ export function ReadingEditor({ initialReports }: { initialReports: any[] }) {
           </p>
         ) : (
           <div className="mt-4 space-y-4">
-            {pending.map((report: any) => (
-              <div key={report.id} className="border border-yellow-500/20 bg-card p-5">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-serif text-lg text-foreground capitalize">
-                      {report.report_type.replace(/_/g, ' ')}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Client: {report.profiles?.first_name || report.profiles?.full_name || 'Unknown'} · {report.coins_charged} coins · {new Date(report.created_at).toLocaleString()}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Birth: {formatBirthData(report.input_data)}
-                    </p>
+            {pending.map((report: any) => {
+              const info = formatInputData(report.input_data)
+              return (
+                <div key={report.id} className="border border-yellow-500/20 bg-card p-5">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="font-serif text-lg text-foreground capitalize">
+                        {report.report_type.replace(/_/g, ' ')}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Client: {report.profiles?.first_name || report.profiles?.full_name || 'Unknown'} · {report.coins_charged} coins · {new Date(report.created_at).toLocaleString()}
+                      </p>
+
+                      {info && (
+                        <div className="mt-3 space-y-1.5 rounded bg-background/50 p-3">
+                          <p className="text-xs text-muted-foreground">
+                            <span className="text-accent">Birth:</span> {info.birth}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            <span className="text-accent">Sign:</span> {info.sign} · <span className="text-accent">Gender:</span> {info.gender}
+                          </p>
+                          <p className="text-sm text-foreground">
+                            <span className="text-xs text-accent">Question:</span> {info.question}
+                          </p>
+                          {info.partner && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="text-accent">Partner:</span> {info.partner}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {editing !== report.id && (
+                      <button
+                        type="button"
+                        onClick={() => startEditing(report)}
+                        className="ml-4 flex-shrink-0 rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                      >
+                        Write reading
+                      </button>
+                    )}
                   </div>
-                  {editing !== report.id && (
-                    <button
-                      type="button"
-                      onClick={() => startEditing(report)}
-                      className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg"
-                    >
-                      Write reading
-                    </button>
+
+                  {editing === report.id && (
+                    <div className="mt-5 space-y-4">
+                      <div>
+                        <label className="block text-xs uppercase tracking-[0.2em] text-accent">
+                          Reading (English) *
+                        </label>
+                        <textarea
+                          value={contentEn}
+                          onChange={(e) => setContentEn(e.target.value)}
+                          rows={12}
+                          className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                          placeholder="Write the reading here..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs uppercase tracking-[0.2em] text-accent">
+                          Reading (Arabic) <span className="normal-case text-muted-foreground">— optional</span>
+                        </label>
+                        <textarea
+                          value={contentAr}
+                          onChange={(e) => setContentAr(e.target.value)}
+                          rows={8}
+                          dir="rtl"
+                          className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
+                          placeholder="اكتب القراءة بالعربي هنا..."
+                        />
+                      </div>
+                      <div className="flex gap-3">
+                        <button
+                          type="button"
+                          onClick={() => handleSave(report.id)}
+                          disabled={saving || !contentEn.trim()}
+                          className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50"
+                        >
+                          {saving ? 'Saving...' : 'Submit reading'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditing(null)}
+                          className="rounded-full border border-border px-6 py-2.5 text-sm text-muted-foreground hover:border-accent hover:text-accent"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
-
-                {editing === report.id && (
-                  <div className="mt-5 space-y-4">
-                    <div>
-                      <label className="block text-xs uppercase tracking-[0.2em] text-accent">
-                        Reading (English) *
-                      </label>
-                      <textarea
-                        value={contentEn}
-                        onChange={(e) => setContentEn(e.target.value)}
-                        rows={12}
-                        className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
-                        placeholder="Write the reading here..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs uppercase tracking-[0.2em] text-accent">
-                        Reading (Arabic) <span className="normal-case text-muted-foreground">— optional</span>
-                      </label>
-                      <textarea
-                        value={contentAr}
-                        onChange={(e) => setContentAr(e.target.value)}
-                        rows={8}
-                        dir="rtl"
-                        className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
-                        placeholder="اكتب القراءة بالعربي هنا..."
-                      />
-                    </div>
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => handleSave(report.id)}
-                        disabled={saving || !contentEn.trim()}
-                        className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50"
-                      >
-                        {saving ? 'Saving...' : 'Submit reading'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setEditing(null)}
-                        className="rounded-full border border-border px-6 py-2.5 text-sm text-muted-foreground hover:border-accent hover:text-accent"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </div>
