@@ -113,17 +113,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to charge coins' }, { status: 400 })
     }
 
-    // Call Claude API to generate the report
+    // Call Z.ai API to generate the report
     try {
-      const aiResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      const aiResponse = await fetch('https://api.z.ai/api/paas/v4/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY || '',
-          'anthropic-version': '2023-06-01',
+          'Authorization': `Bearer ${process.env.ZAI_API_KEY || ''}`,
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'glm-4-flash',
           max_tokens: 4000,
           messages: [
             { role: 'user', content: buildPrompt(report_type, birth) },
@@ -132,12 +131,11 @@ export async function POST(request: Request) {
       })
 
       const aiData = await aiResponse.json()
-      const content = aiData.content
-        ?.map((block: any) => (block.type === 'text' ? block.text : ''))
-        .filter(Boolean)
-        .join('\n') || ''
+      
+      // Z.ai uses OpenAI-compatible format
+      const content = aiData.choices?.[0]?.message?.content || ''
 
-      if (!content) throw new Error('Empty AI response')
+      if (!content) throw new Error('Empty response')
 
       // Split English and Arabic sections
       const arabicSplit = content.indexOf('---')
@@ -147,7 +145,7 @@ export async function POST(request: Request) {
       await admin.from('ai_reports').update({
         content_en: contentEn,
         content_ar: contentAr || null,
-        model_used: 'claude-sonnet-4-6',
+        model_used: 'glm-4-flash',
         generation_status: 'completed',
         generated_at: new Date().toISOString(),
       }).eq('id', report.id)
