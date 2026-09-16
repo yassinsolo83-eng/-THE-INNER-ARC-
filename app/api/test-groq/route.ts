@@ -15,7 +15,7 @@ export async function GET() {
         'Authorization': `Bearer ${key}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'meta-llama/llama-4-scout-17b-16e-instruct',
         max_tokens: 50,
         messages: [{ role: 'user', content: 'Say hello in one sentence.' }],
       }),
