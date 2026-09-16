@@ -18,10 +18,14 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { report_type } = body
+    const { report_type, question, gender, partner } = body
 
     if (!report_type || !COIN_COST[report_type]) {
       return NextResponse.json({ error: 'Invalid report type' }, { status: 400 })
+    }
+
+    if (!question?.trim()) {
+      return NextResponse.json({ error: 'Please describe what you would like to know' }, { status: 400 })
     }
 
     const coinCost = COIN_COST[report_type]
@@ -55,13 +59,21 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create the report row as pending (waiting for admin to write it)
+    // Combine all input data
+    const inputData = {
+      ...birth,
+      question,
+      gender,
+      partner: partner || null,
+    }
+
+    // Create the report row as pending
     const { data: report, error: reportError } = await admin
       .from('ai_reports')
       .insert({
         client_id: user.id,
         report_type,
-        input_data: birth,
+        input_data: inputData,
         coins_charged: coinCost,
         generation_status: 'pending',
       })
