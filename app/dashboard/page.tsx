@@ -37,6 +37,7 @@ export default async function DashboardPage() {
               <h1 className="mt-4 font-serif text-5xl text-foreground">
                 Welcome, {displayName}
               </h1>
+              <p className="mt-2 text-xs text-muted-foreground">{user.email}</p>
             </div>
             <LogoutButton />
           </div>
