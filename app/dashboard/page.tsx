@@ -39,7 +39,14 @@ export default async function DashboardPage() {
               </h1>
               <p className="mt-2 text-xs text-muted-foreground">{user.email}</p>
             </div>
-            <LogoutButton />
+            <div className="flex items-center gap-3">
+              {profile?.role === 'admin' && (
+                <Link href="/admin" className="rounded-full border border-accent px-5 py-2.5 text-xs text-accent transition-all duration-300 hover:bg-accent hover:text-background">
+                  Admin Panel
+                </Link>
+              )}
+              <LogoutButton />
+            </div>
           </div>
         </HeroEntrance>
 
