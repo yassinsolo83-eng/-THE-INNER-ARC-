@@ -4,11 +4,29 @@ import { ReadingEditor } from '@/components/admin/reading-editor'
 export default async function AdminReadingsPage() {
   const supabase = await createServerClient()
 
+  // Fetch reports and client profiles separately to avoid FK naming issues
   const { data: reports } = await supabase
     .from('ai_reports')
-    .select('id, report_type, generation_status, input_data, content_en, content_ar, coins_charged, created_at, client_id, profiles!ai_reports_client_id_fkey(first_name, full_name)')
+    .select('*')
     .order('created_at', { ascending: false })
     .limit(50)
+
+  // Get unique client IDs and fetch their profiles
+  const clientIds = [...new Set((reports || []).map((r: any) => r.client_id))]
+  const { data: profiles } = clientIds.length > 0
+    ? await supabase.from('profiles').select('id, first_name, full_name').in('id', clientIds)
+    : { data: [] }
+
+  // Merge profiles into reports
+  const profileMap: Record<string, any> = {}
+  for (const p of profiles || []) {
+    profileMap[p.id] = p
+  }
+
+  const enrichedReports = (reports || []).map((r: any) => ({
+    ...r,
+    profiles: profileMap[r.client_id] || null,
+  }))
 
   return (
     <div>
@@ -17,7 +35,7 @@ export default async function AdminReadingsPage() {
         View and respond to client reading requests.
       </p>
       <div className="mt-8">
-        <ReadingEditor initialReports={reports || []} />
+        <ReadingEditor initialReports={enrichedReports} />
       </div>
     </div>
   )

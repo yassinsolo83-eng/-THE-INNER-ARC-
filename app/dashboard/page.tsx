@@ -156,7 +156,11 @@ export default async function DashboardPage() {
               <h2 className="text-xs uppercase tracking-[0.2em] text-accent">Recent readings</h2>
               <div className="mt-4 divide-y divide-border border border-border">
                 {reports.map((r: any) => (
-                  <div key={r.id} className="flex items-center justify-between p-4">
+                  <Link
+                    key={r.id}
+                    href={`/dashboard/reading/${r.id}`}
+                    className="flex items-center justify-between p-4 transition-colors hover:bg-accent/5"
+                  >
                     <div>
                       <p className="text-sm text-foreground capitalize">
                         {r.report_type.replace(/_/g, ' ')}
@@ -165,18 +169,23 @@ export default async function DashboardPage() {
                         {new Date(r.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        r.generation_status === 'completed'
-                          ? 'bg-emerald-950/60 text-emerald-400'
-                          : r.generation_status === 'failed'
-                            ? 'bg-red-950/60 text-red-400'
-                            : 'bg-yellow-950/60 text-yellow-400'
-                      }`}
-                    >
-                      {r.generation_status === 'completed' ? 'Ready' : r.generation_status === 'generating' ? 'In progress' : r.generation_status}
-                    </span>
-                  </div>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          r.generation_status === 'completed'
+                            ? 'bg-emerald-950/60 text-emerald-400'
+                            : r.generation_status === 'failed'
+                              ? 'bg-red-950/60 text-red-400'
+                              : 'bg-yellow-950/60 text-yellow-400'
+                        }`}
+                      >
+                        {r.generation_status === 'completed' ? 'Ready' : r.generation_status === 'generating' ? 'In progress' : r.generation_status}
+                      </span>
+                      {r.generation_status === 'completed' && (
+                        <span className="text-xs text-accent">View →</span>
+                      )}
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>
