@@ -122,7 +122,7 @@ export async function POST(request: Request) {
           'Authorization': `Bearer ${process.env.GROQ_API_KEY || ''}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: 'meta-llama/llama-4-scout-17b-16e-instruct',
           max_tokens: 4000,
           messages: [
             { role: 'user', content: buildPrompt(report_type, birth) },
