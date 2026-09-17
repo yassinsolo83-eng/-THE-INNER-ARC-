@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { SiteShell } from '@/components/site'
 import { HeroEntrance } from '@/components/hero-entrance'
+import { Reveal } from '@/components/reveal'
 import { BirthProfileForm } from '@/components/birth-profile-form'
+import { PalmScan } from '@/components/palm-scan'
 import { createServerClient } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Birth Profile — The Inner Arc' }
@@ -14,7 +16,7 @@ export default async function BirthProfilePage() {
 
   const { data: existing } = await supabase
     .from('client_birth_profiles')
-    .select('birth_date, birth_time, birth_city, birth_country, zodiac_sign')
+    .select('*')
     .eq('client_id', user.id)
     .single()
 
@@ -32,15 +34,24 @@ export default async function BirthProfilePage() {
           <p className="mt-8 text-xs uppercase tracking-[0.3em] text-accent">Your details</p>
           <h1 className="mt-4 font-serif text-5xl text-foreground">Birth Profile</h1>
           <p className="mt-4 max-w-lg text-muted-foreground">
-            Your birth details are used for astrology, birth chart, and zodiac compatibility
-            services. This information is stored securely and shared with readers only when
-            you book an astrology-related session.
+            Your birth details and personal preferences are used to create more
+            accurate and personalized readings. This information is stored securely.
           </p>
         </HeroEntrance>
 
         <div className="mt-12 border border-border bg-card p-6 sm:p-8">
           <BirthProfileForm existing={existing} />
         </div>
+
+        {/* Palm scan — only show after birth profile is saved */}
+        {existing && (
+          <Reveal animation="fade-up" delay={200}>
+            <div className="mt-8">
+              <p className="mb-4 text-xs uppercase tracking-[0.2em] text-accent">Palm reading</p>
+              <PalmScan alreadyScanned={!!existing.palm_scanned_at} />
+            </div>
+          </Reveal>
+        )}
       </main>
     </SiteShell>
   )
