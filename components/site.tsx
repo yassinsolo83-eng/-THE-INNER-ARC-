@@ -188,11 +188,52 @@ export function ArrowLink({ href, children }: { href: string; children: React.Re
 }
 
 export function NewsletterForm() {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setStatus('loading')
+    try {
+      const supabase = getSupabaseBrowserClient()
+      const { error } = await supabase
+        .from('newsletter_subscribers')
+        .upsert({ email }, { onConflict: 'email' })
+      if (error) throw error
+      setStatus('done')
+      setEmail('')
+    } catch {
+      setStatus('error')
+    }
+  }
+
+  if (status === 'done') {
+    return (
+      <p className="rounded-full border border-emerald-500/30 bg-emerald-950/30 px-6 py-3 text-center text-sm text-emerald-400">
+        You are on the list ✓
+      </p>
+    )
+  }
+
   return (
-    <form className="flex w-full max-w-md flex-col gap-3 sm:flex-row" onSubmit={(e) => e.preventDefault()}>
+    <form className="flex w-full max-w-md flex-col gap-3 sm:flex-row" onSubmit={handleSubmit}>
       <label className="sr-only" htmlFor="newsletter-email">Email address</label>
-      <input id="newsletter-email" type="email" required placeholder="Your email address" className="min-w-0 flex-1 rounded-full border border-border bg-background px-5 py-3 text-sm text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground focus:border-accent focus:shadow-[0_0_0_3px_rgba(212,165,165,0.1)]" />
-      <button className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Join the list</button>
+      <input
+        id="newsletter-email"
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Your email address"
+        className="min-w-0 flex-1 rounded-full border border-border bg-background px-5 py-3 text-sm text-foreground outline-none transition-all duration-300 placeholder:text-muted-foreground focus:border-accent focus:shadow-[0_0_0_3px_rgba(212,165,165,0.1)]"
+      />
+      <button
+        disabled={status === 'loading'}
+        className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95 disabled:opacity-50"
+      >
+        {status === 'loading' ? '...' : 'Join the list'}
+      </button>
+      {status === 'error' && <p className="text-xs text-red-400">Something went wrong</p>}
     </form>
   )
 }
