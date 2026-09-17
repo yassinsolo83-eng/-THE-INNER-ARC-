@@ -21,25 +21,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Admin nav bar */}
-      <div className="border-b border-border bg-card">
+      <div className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-6">
+          <nav className="flex items-center gap-6">
             <Link href="/admin" className="font-serif text-lg text-foreground">
               Admin Panel
             </Link>
-            <nav className="flex gap-4">
-              <Link href="/admin" className="text-sm text-muted-foreground transition-colors hover:text-accent">
-                Overview
-              </Link>
-              <Link href="/admin/promos" className="text-sm text-muted-foreground transition-colors hover:text-accent">
-                Promo Codes
-              </Link>
-              <Link href="/admin/readings" className="text-sm text-muted-foreground transition-colors hover:text-accent">
-                Readings
-              </Link>
-            </nav>
-          </div>
+            <Link href="/admin/promos" className="text-sm text-muted-foreground transition-colors hover:text-accent">
+              Promo Codes
+            </Link>
+            <Link href="/admin/readings" className="text-sm text-muted-foreground transition-colors hover:text-accent">
+              Readings
+            </Link>
+          </nav>
           <Link href="/dashboard" className="text-xs text-muted-foreground hover:text-accent">
             ← Back to site
           </Link>
