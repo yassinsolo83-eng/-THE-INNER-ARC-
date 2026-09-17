@@ -79,7 +79,7 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-border/60 transition-all duration-500"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 transition-all duration-500"
       style={{
         background: scrolled ? 'rgba(15, 18, 41, 0.95)' : 'rgba(15, 18, 41, 0.7)',
         backdropFilter: 'blur(20px) saturate(180%)',
@@ -162,7 +162,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return <>
     <ScrollToTop />
     <Constellation />
-    <div className="relative z-10">
+    <div className="relative z-10 pt-[72px]">
       <Navbar />
       {children}
       <Footer />
