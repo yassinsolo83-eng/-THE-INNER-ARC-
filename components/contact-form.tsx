@@ -23,6 +23,12 @@ export function ContactForm() {
         .insert({ name, email, message })
 
       if (dbError) throw dbError
+      // Send confirmation email
+      fetch('/api/email/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
+      }).catch(() => {})
       setSent(true)
     } catch (err: any) {
       setError(err?.message || 'Failed to send. Please try again.')

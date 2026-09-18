@@ -20,7 +20,7 @@ export function ReadingEditor({ initialReports }: { initialReports: any[] }) {
     setContentAr(report.content_ar || '')
   }
 
-  async function handleSave(reportId: string) {
+  async function handleSave(reportId: string, clientId: string, readingType: string) {
     if (!contentEn.trim()) return
     setSaving(true)
 
@@ -38,6 +38,13 @@ export function ReadingEditor({ initialReports }: { initialReports: any[] }) {
         .eq('id', reportId)
 
       if (error) throw error
+
+      // Notify client via email
+      fetch('/api/email/reading-ready', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId, clientId, readingType }),
+      }).catch(() => {})
 
       setEditing(null)
       router.refresh()
@@ -149,7 +156,7 @@ export function ReadingEditor({ initialReports }: { initialReports: any[] }) {
                       <div className="flex gap-3">
                         <button
                           type="button"
-                          onClick={() => handleSave(report.id)}
+                          onClick={() => handleSave(report.id, report.client_id, report.report_type)}
                           disabled={saving || !contentEn.trim()}
                           className="rounded-full bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50"
                         >

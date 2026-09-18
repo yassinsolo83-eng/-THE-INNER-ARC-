@@ -254,6 +254,12 @@ export function NewsletterForm() {
         .from('newsletter_subscribers')
         .upsert({ email }, { onConflict: 'email' })
       if (error) throw error
+      // Send welcome email
+      fetch('/api/email/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      }).catch(() => {})
       setStatus('done')
       setEmail('')
     } catch {
