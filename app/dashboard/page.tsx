@@ -5,6 +5,7 @@ import { HeroEntrance } from '@/components/hero-entrance'
 import { Reveal } from '@/components/reveal'
 import { LogoutButton } from '@/components/logout-button'
 import { PromoCodeInput } from '@/components/promo-code-input'
+import { WhatsAppButton } from '@/components/whatsapp-button'
 import { createServerClient } from '@/lib/supabase/server'
 
 export const metadata = { title: 'Dashboard — The Inner Arc' }
@@ -146,6 +147,13 @@ export default async function DashboardPage() {
         <Reveal animation="fade-up" delay={550}>
           <div className="mt-8">
             <PromoCodeInput />
+          </div>
+        </Reveal>
+
+        {/* WhatsApp */}
+        <Reveal animation="fade-up" delay={600}>
+          <div className="mt-4">
+            <WhatsAppButton />
           </div>
         </Reveal>
 
