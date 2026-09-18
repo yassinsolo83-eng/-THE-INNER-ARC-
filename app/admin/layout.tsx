@@ -23,19 +23,25 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <nav className="flex items-center gap-6">
-            <Link href="/admin" className="font-serif text-lg text-foreground">
-              Admin Panel
+          <nav className="flex items-center gap-4 overflow-x-auto">
+            <Link href="/admin" className="flex-shrink-0 font-serif text-lg text-foreground">
+              Admin
             </Link>
-            <Link href="/admin/promos" className="text-sm text-muted-foreground transition-colors hover:text-accent">
-              Promo Codes
-            </Link>
-            <Link href="/admin/readings" className="text-sm text-muted-foreground transition-colors hover:text-accent">
+            <Link href="/admin/readings" className="flex-shrink-0 text-sm text-muted-foreground transition-colors hover:text-accent">
               Readings
             </Link>
+            <Link href="/admin/promos" className="flex-shrink-0 text-sm text-muted-foreground transition-colors hover:text-accent">
+              Promos
+            </Link>
+            <Link href="/admin/messages" className="flex-shrink-0 text-sm text-muted-foreground transition-colors hover:text-accent">
+              Messages
+            </Link>
+            <Link href="/admin/settings" className="flex-shrink-0 text-sm text-muted-foreground transition-colors hover:text-accent">
+              Settings
+            </Link>
           </nav>
-          <Link href="/dashboard" className="text-xs text-muted-foreground hover:text-accent">
-            ← Back to site
+          <Link href="/dashboard" className="flex-shrink-0 text-xs text-muted-foreground hover:text-accent">
+            ← Site
           </Link>
         </div>
       </div>
