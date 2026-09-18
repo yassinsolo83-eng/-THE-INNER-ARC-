@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { SiteShell } from '@/components/site'
+import { SiteShell, NewsletterForm } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { getPosts } from '@/lib/content'
@@ -44,6 +44,26 @@ export default async function Blog() {
                 </article>
               </Reveal>
             ))}
+          </div>
+        </section>
+
+        {/* ── Subscribe ────────────────────────────────── */}
+        <section className="border-t border-border/60 bg-card">
+          <div className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
+            <Reveal animation="fade-up">
+              <div className="mx-auto max-w-xl text-center">
+                <p className="text-xs uppercase tracking-[0.3em] text-accent">Stay connected</p>
+                <h2 className="mt-4 font-serif text-3xl text-foreground">
+                  Get new entries delivered to your inbox
+                </h2>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Reflections, card readings, and the occasional question worth sitting with.
+                </p>
+                <div className="mt-6 flex justify-center">
+                  <NewsletterForm />
+                </div>
+              </div>
+            </Reveal>
           </div>
         </section>
       </main>
