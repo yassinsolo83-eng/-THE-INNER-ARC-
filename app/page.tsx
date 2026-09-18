@@ -44,7 +44,7 @@ export default async function Home() {
         </section>
 
         {/* ── Mirror ────────────────────────────────────── */}
-        <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
+        <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
             <Reveal animation="fade-left" delay={200}><div className="lg:justify-self-end"><ArrowLink href="/about-tarot">Learn more about tarot</ArrowLink></div></Reveal>
