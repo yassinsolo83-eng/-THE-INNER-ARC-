@@ -112,6 +112,7 @@ export function QuizFlow({ userId, existing }: { userId: string; existing: any }
         palm_scanned_at: scanDone ? new Date().toISOString() : null,
       }, { onConflict: 'client_id' })
 
+      localStorage.setItem('quiz-completed', '1')
       router.push('/dashboard')
     } catch {
       alert('Failed to save. Please try again.')
@@ -165,13 +166,8 @@ export function QuizFlow({ userId, existing }: { userId: string; existing: any }
       {/* Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center px-6">
         <div
-          className={`w-full max-w-lg transition-all duration-300 ${
-            animating
-              ? dir > 0
-                ? 'translate-x-8 opacity-0'
-                : '-translate-x-8 opacity-0'
-              : 'translate-x-0 opacity-100'
-          }`}
+          key={step}
+          className="w-full max-w-lg quiz-step-enter"
         >
           {/* Step 0: Welcome */}
           {step === 0 && (
@@ -422,29 +418,43 @@ export function QuizFlow({ userId, existing }: { userId: string; existing: any }
           width: 100%;
           text-align: center;
           border-radius: 9999px;
-          background: #B76E79;
+          background: linear-gradient(135deg, #B76E79 0%, #C9A24B 100%);
           color: #0F1229;
-          padding: 14px 28px;
-          font-size: 14px;
+          padding: 16px 28px;
+          font-size: 15px;
           font-weight: 600;
-          transition: all 0.3s;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           cursor: pointer;
           border: none;
+          letter-spacing: 0.02em;
         }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(183,110,121,0.3); }
-        .btn-primary:disabled { opacity: 0.5; transform: none; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(183,110,121,0.4); }
+        .btn-primary:active { transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; transform: none; box-shadow: none; }
         .input-field {
           width: 100%;
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid rgba(255,255,255,0.08);
           background: rgba(255,255,255,0.03);
-          padding: 14px 16px;
+          padding: 16px 18px;
           font-size: 16px;
           color: #F5F1EB;
           outline: none;
-          transition: border 0.3s;
+          transition: all 0.3s ease;
           border-radius: 0;
+          backdrop-filter: blur(4px);
         }
-        .input-field:focus { border-color: #B76E79; }
+        .input-field:focus { border-color: #B76E79; box-shadow: 0 0 0 3px rgba(183,110,121,0.1); }
+        @keyframes floatIn {
+          from { opacity: 0; transform: translateY(30px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .quiz-step-enter {
+          animation: floatIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
       `}</style>
     </div>
   )

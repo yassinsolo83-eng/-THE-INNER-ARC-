@@ -7,6 +7,8 @@ import { Constellation } from './constellation'
 import { AnimatedLogo } from './animated-logo'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { WhatsAppFooter } from './whatsapp-footer'
+import { KeyholeIntro } from './keyhole-intro'
+import { QuizPopup } from './quiz-popup'
 
 const navItems = [
   { href: '/about-tarot', label: 'About tarot' },
@@ -207,6 +209,8 @@ export function Footer() {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return <>
+    <KeyholeIntro />
+    <QuizPopup />
     <ScrollToTop />
     <Constellation />
     <div className="relative z-10 pt-[72px]">

@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/dashboard'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
@@ -39,7 +41,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
           password,
         })
         if (error) throw error
-        router.push('/dashboard')
+        router.push(redirectTo)
         router.refresh()
       }
     } catch (err: any) {
@@ -54,7 +56,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
         queryParams: { prompt: 'select_account' },
       },
     })
@@ -66,7 +68,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
       },
     })
     if (error) setError(error.message)
