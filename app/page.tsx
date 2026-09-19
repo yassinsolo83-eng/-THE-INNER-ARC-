@@ -34,7 +34,7 @@ export default async function Home() {
                 <HeroEntrance delay={400}><p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground lg:mx-0">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p></HeroEntrance>
                 <HeroEntrance delay={600}>
                   <div className="mt-10 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
-                    <Link href="/services" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Explore readings</Link>
+                    <Link href="/quiz" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Explore readings</Link>
                     <ArrowLink href="/about-tarot">What is tarot?</ArrowLink>
                   </div>
                 </HeroEntrance>
