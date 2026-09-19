@@ -61,6 +61,17 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
     if (error) setError(error.message)
   }
 
+  async function handleFacebookLogin() {
+    const supabase = getSupabaseBrowserClient()
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+    if (error) setError(error.message)
+  }
+
   return (
     <div className="mx-auto w-full max-w-md">
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -140,6 +151,14 @@ export function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
         className="w-full rounded-full border border-border py-3 text-sm text-foreground transition-all duration-300 hover:border-accent hover:text-accent"
       >
         Continue with Google
+      </button>
+
+      <button
+        type="button"
+        onClick={handleFacebookLogin}
+        className="mt-3 w-full rounded-full border border-border py-3 text-sm text-foreground transition-all duration-300 hover:border-[#1877F2] hover:text-[#1877F2]"
+      >
+        Continue with Facebook
       </button>
 
       <p className="mt-6 text-center text-sm text-muted-foreground">

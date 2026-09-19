@@ -1,19 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export function ContactForm() {
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  useEffect(() => {
+    async function checkAuth() {
+      const supabase = getSupabaseBrowserClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      if (user) {
+        setEmail(user.email || '')
+        const { data: profile } = await supabase.from('profiles').select('full_name, first_name').eq('id', user.id).single()
+        if (profile) setName(profile.full_name || profile.first_name || '')
+      }
+      setLoading(false)
+    }
+    checkAuth()
+  }, [])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
+    setSending(true)
     setError(null)
 
     try {
@@ -23,7 +41,6 @@ export function ContactForm() {
         .insert({ name, email, message })
 
       if (dbError) throw dbError
-      // Send confirmation email
       fetch('/api/email/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -33,8 +50,28 @@ export function ContactForm() {
     } catch (err: any) {
       setError(err?.message || 'Failed to send. Please try again.')
     } finally {
-      setLoading(false)
+      setSending(false)
     }
+  }
+
+  if (loading) return null
+
+  if (!user) {
+    return (
+      <div className="py-12 text-center">
+        <span className="text-3xl">🔒</span>
+        <p className="mt-4 font-serif text-xl text-foreground">Sign in to send a message</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Please sign in or create an account to contact us.
+        </p>
+        <Link
+          href="/auth/login?redirect=/contact"
+          className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          Sign in
+        </Link>
+      </div>
+    )
   }
 
   if (sent) {
@@ -70,8 +107,8 @@ export function ContactForm() {
             type="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-2 w-full border-b border-border bg-transparent pb-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+            readOnly
+            className="mt-2 w-full border-b border-border bg-transparent pb-3 text-sm text-foreground/60 outline-none"
           />
         </div>
       </div>
@@ -91,10 +128,10 @@ export function ContactForm() {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={sending}
         className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 disabled:opacity-50"
       >
-        {loading ? 'Sending...' : 'Send your note'}
+        {sending ? 'Sending...' : 'Send your note'}
       </button>
     </form>
   )
