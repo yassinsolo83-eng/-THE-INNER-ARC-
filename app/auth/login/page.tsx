@@ -1,7 +1,9 @@
+import { Suspense } from 'react'
 import { SiteShell } from '@/components/site'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { AuthForm } from '@/components/auth-form'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Sign In — The Inner Arc' }
 
 export default function LoginPage() {
@@ -16,7 +18,9 @@ export default function LoginPage() {
           </div>
         </HeroEntrance>
         <div className="mt-12">
-          <AuthForm mode="login" />
+          <Suspense fallback={<div className="text-center text-sm text-muted-foreground">Loading...</div>}>
+            <AuthForm mode="login" />
+          </Suspense>
         </div>
       </main>
     </SiteShell>
