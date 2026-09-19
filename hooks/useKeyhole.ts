@@ -19,9 +19,9 @@ export function useKeyhole({ setIntroDone }: Setters) {
     const hint = document.getElementById('kh-hint')
 
     const isMobile = window.innerWidth <= 860
-    const MIN = isMobile ? 5 : 6.5 // keyhole fits fully within the screen
+    const MIN = isMobile ? 4 : 5 // full keyhole visible within screen
     const MAX = 46
-    const CY = 480
+    const CY = 500
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
     const smooth = (x: number) => x * x * (3 - 2 * x)
 
