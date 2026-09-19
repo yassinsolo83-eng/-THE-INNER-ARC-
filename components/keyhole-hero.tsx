@@ -28,18 +28,18 @@ export function KeyholeHero({ children }: { children: React.ReactNode }) {
                 <path
                   id="kh-hole"
                   fill="black"
-                  transform="translate(500 480) scale(6.5) translate(-50 -50)"
+                  transform="translate(500 500) scale(5) translate(-50 -50)"
                   d={KEYHOLE_PATH}
                 />
               </mask>
             </defs>
-            <rect id="kh-dark" width="1000" height="1000" fill="#050813" fillOpacity="1" mask="url(#kh-mask)" />
+            <rect id="kh-dark" width="1000" height="1000" fill="#0F1229" fillOpacity="1" mask="url(#kh-mask)" />
             <path
               id="kh-ring"
               fill="none"
               stroke="#B76E79"
-              strokeWidth="1"
-              transform="translate(500 480) scale(6.5) translate(-50 -50)"
+              strokeWidth="1.4"
+              transform="translate(500 500) scale(5) translate(-50 -50)"
               d={KEYHOLE_PATH}
             />
           </svg>
