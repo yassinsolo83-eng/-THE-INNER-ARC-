@@ -2,21 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export function QuizPopup() {
+  const pathname = usePathname()
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    // Don't show if already dismissed or if user came from quiz
+    // Only on homepage
+    if (pathname !== '/') return
+
     if (typeof window !== 'undefined') {
       if (sessionStorage.getItem('quiz-popup-dismissed')) return
       if (localStorage.getItem('quiz-completed')) return
     }
 
-    // Show after the intro animation finishes + a small delay
-    const timer = setTimeout(() => setShow(true), 4500)
+    const timer = setTimeout(() => setShow(true), 3000)
     return () => clearTimeout(timer)
-  }, [])
+  }, [pathname])
 
   function dismiss() {
     setShow(false)
