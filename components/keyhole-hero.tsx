@@ -1,120 +1,51 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowLink, NewsletterForm, SectionHeading, SiteShell } from '@/components/site'
-import { Reveal } from '@/components/reveal'
-import { HeroEntrance } from '@/components/hero-entrance'
-import { FlippingDeck } from '@/components/floating-cards'
-import { KeyholeHero } from '@/components/keyhole-hero'
-import { getServices, getTestimonials } from '@/lib/content'
+'use client'
 
-export const metadata = { title: 'The Inner Arc — Tarot for the questions that matter', description: 'Thoughtful tarot readings for reflection, direction, and the questions that stay with you.' }
+import { useState } from 'react'
+import { useKeyhole } from '@/hooks/useKeyhole'
 
-export default async function Home() {
-  const services = await getServices()
-  const testimonials = await getTestimonials()
+// Keyhole path — a classic keyhole shape (circle + tapered stem)
+const KEYHOLE_PATH =
+  'M50 8 C38 8 28 18 28 32 C28 42 34 50 42 54 L34 88 L66 88 L58 54 C66 50 72 42 72 32 C72 18 62 8 50 8 Z'
+
+export function KeyholeHero({ children }: { children: React.ReactNode }) {
+  const [introDone, setIntroDone] = useState(false)
+  useKeyhole({ setIntroDone })
 
   return (
-    <SiteShell>
-      <main>
-        {/* ── Keyhole Hero (scroll to open) ─────────────── */}
-        <div className="-mt-[72px]">
-        <KeyholeHero>
-          <section
-            className="relative flex h-full items-center bg-cover bg-center"
-            style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/40 to-background/80" />
-            <div className="relative mx-auto w-full max-w-7xl px-6 py-24 lg:px-10">
-              <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-                {/* Deck: second on mobile (below text), second on desktop (right) */}
-                <div className="order-2 lg:order-2 lg:justify-self-end">
-                  <FlippingDeck />
-                </div>
-                {/* Text: first on mobile (top), first on desktop (left) */}
-                <div className="order-1 text-center lg:order-1 lg:text-left">
-                  <p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
-                  <h1 className="shimmer font-serif text-6xl leading-[0.96] tracking-tight md:text-8xl text-balance">Make room for what you already know.</h1>
-                  <p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground lg:mx-0">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p>
-                  <div className="mt-10 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
-                    <Link href="/quiz" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Explore readings</Link>
-                    <ArrowLink href="/about-tarot">What is tarot?</ArrowLink>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        </KeyholeHero>
+    <div id="kh-track" className="kh-track">
+      <div className="kh-stage">
+        {/* The hero content, revealed through the keyhole */}
+        <div className={`kh-hero-content ${introDone ? 'kh-text-in' : 'kh-text-out'}`}>
+          {children}
         </div>
 
-        {/* ── Mirror ────────────────────────────────────── */}
-        <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
-          <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
-            <Reveal animation="fade-left" delay={200}><div className="lg:justify-self-end"><ArrowLink href="/about-tarot">Learn more about tarot</ArrowLink></div></Reveal>
-          </div>
-        </section>
-
-        {/* ── Reading room (glow cards) ─────────────────── */}
-        <section className="bg-card">
-          <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-            <Reveal animation="fade-up"><SectionHeading eyebrow="The reading room" title="Come as you are. Leave with a little more clarity." /></Reveal>
-            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-              {services.map((item, index) => (
-                <Reveal key={item.title} animation="fade-up" delay={index * 120}>
-                  <Link href="/services" className="glow-card group block overflow-hidden border border-border bg-card transition-all duration-500">
-                    <div className="relative aspect-[16/10] w-full overflow-hidden">
-                      <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 50vw, 25vw" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                      <span className="absolute bottom-3 left-4 font-mono text-xs text-accent">0{index + 1}</span>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="font-serif text-2xl text-foreground">{item.title}</h3>
-                      <p className="mt-2 text-xs uppercase tracking-[0.16em] text-accent">{item.category}</p>
-                      <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
-                    </div>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
-            <Reveal animation="fade-up" delay={500}><div className="mt-8"><ArrowLink href="/services">View all readings</ArrowLink></div></Reveal>
-          </div>
-        </section>
-
-        {/* ── Kind words ────────────────────────────────── */}
-        <section className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-          <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
-            <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="Kind words" title="A reading can become a new way of listening." /></Reveal>
-            <div className="grid gap-6 md:grid-cols-2">
-              {testimonials.map((t, i) => (
-                <Reveal key={i} animation="fade-up" delay={i * 150}>
-                  <figure className="border-l border-accent pl-6">
-                    <blockquote className="font-serif text-2xl leading-9 text-foreground">&ldquo;{t.quote}&rdquo;</blockquote>
-                    <figcaption className="mt-6 text-xs uppercase tracking-[0.18em] text-muted-foreground">— {t.name}, {t.context}</figcaption>
-                  </figure>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Newsletter CTA ────────────────────────────── */}
-        <section
-          className="relative min-h-[420px] bg-cover bg-center bg-fixed lg:min-h-[500px]"
-          style={{ backgroundImage: 'url(/images/newsletter-cta.jpg)' }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/65 to-transparent" />
-          <Reveal animation="fade-up">
-            <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[500px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
-              <div className="max-w-lg">
-                <p className="text-xs uppercase tracking-[0.25em] text-accent">Notes from the inner arc</p>
-                <h2 className="shimmer mt-3 font-serif text-5xl leading-tight lg:text-6xl">A little perspective, occasionally.</h2>
-                <p className="mt-4 text-sm leading-7 text-muted-foreground">Join our mailing list for reflections, card readings, and the occasional question worth sitting with.</p>
-              </div>
-              <div className="w-full max-w-md"><NewsletterForm /></div>
-            </div>
-          </Reveal>
-        </section>
-      </main>
-    </SiteShell>
+        {/* Keyhole overlay */}
+        <div className={`kh-overlay ${introDone ? 'kh-open' : ''}`}>
+          <svg className="kh-svg" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1000 1000" aria-hidden="true">
+            <defs>
+              <mask id="kh-mask">
+                <rect width="1000" height="1000" fill="white" />
+                <path
+                  id="kh-hole"
+                  fill="black"
+                  transform="translate(500 480) scale(6.5) translate(-50 -50)"
+                  d={KEYHOLE_PATH}
+                />
+              </mask>
+            </defs>
+            <rect id="kh-dark" width="1000" height="1000" fill="#050813" fillOpacity="1" mask="url(#kh-mask)" />
+            <path
+              id="kh-ring"
+              fill="none"
+              stroke="#B76E79"
+              strokeWidth="1"
+              transform="translate(500 480) scale(6.5) translate(-50 -50)"
+              d={KEYHOLE_PATH}
+            />
+          </svg>
+          <div id="kh-hint" className="kh-hint">Scroll to enter <span>↓</span></div>
+        </div>
+      </div>
+    </div>
   )
 }
