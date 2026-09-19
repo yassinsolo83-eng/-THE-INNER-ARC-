@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { SiteShell } from '@/components/site'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { AuthForm } from '@/components/auth-form'
@@ -16,7 +17,9 @@ export default function SignupPage() {
           </div>
         </HeroEntrance>
         <div className="mt-12">
-          <AuthForm mode="signup" />
+          <Suspense fallback={<div className="text-center text-sm text-muted-foreground">Loading...</div>}>
+            <AuthForm mode="signup" />
+          </Suspense>
         </div>
       </main>
     </SiteShell>
