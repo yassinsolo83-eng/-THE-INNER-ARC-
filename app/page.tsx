@@ -4,6 +4,7 @@ import { ArrowLink, NewsletterForm, SectionHeading, SiteShell } from '@/componen
 import { Reveal } from '@/components/reveal'
 import { HeroEntrance } from '@/components/hero-entrance'
 import { FlippingDeck } from '@/components/floating-cards'
+import { KeyholeHero } from '@/components/keyhole-hero'
 import { getServices, getTestimonials } from '@/lib/content'
 
 export const metadata = { title: 'The Inner Arc — Tarot for the questions that matter', description: 'Thoughtful tarot readings for reflection, direction, and the questions that stay with you.' }
@@ -15,33 +16,35 @@ export default async function Home() {
   return (
     <SiteShell>
       <main>
-        {/* ── Hero ──────────────────────────────────────── */}
-        <section
-          className="relative flex min-h-[620px] items-center bg-cover bg-center bg-fixed lg:min-h-[700px]"
-          style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
-          <div className="relative mx-auto w-full max-w-7xl px-6 py-24 lg:px-10">
-            <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-              {/* Deck: second on mobile (below text), second on desktop (right) */}
-              <div className="order-2 lg:order-2 lg:justify-self-end">
-                <HeroEntrance delay={300}><FlippingDeck /></HeroEntrance>
-              </div>
-              {/* Text: first on mobile (top), first on desktop (left) */}
-              <div className="order-1 text-center lg:order-1 lg:text-left">
-                <HeroEntrance delay={0}><p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p></HeroEntrance>
-                <HeroEntrance delay={200}><h1 className="shimmer font-serif text-6xl leading-[0.96] tracking-tight md:text-8xl text-balance">Make room for what you already know.</h1></HeroEntrance>
-                <HeroEntrance delay={400}><p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground lg:mx-0">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p></HeroEntrance>
-                <HeroEntrance delay={600}>
+        {/* ── Keyhole Hero (scroll to open) ─────────────── */}
+        <div className="-mt-[72px]">
+        <KeyholeHero>
+          <section
+            className="relative flex h-full items-center bg-cover bg-center"
+            style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
+            <div className="relative mx-auto w-full max-w-7xl px-6 py-24 lg:px-10">
+              <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+                {/* Deck: second on mobile (below text), second on desktop (right) */}
+                <div className="order-2 lg:order-2 lg:justify-self-end">
+                  <FlippingDeck />
+                </div>
+                {/* Text: first on mobile (top), first on desktop (left) */}
+                <div className="order-1 text-center lg:order-1 lg:text-left">
+                  <p className="mb-7 text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
+                  <h1 className="shimmer font-serif text-6xl leading-[0.96] tracking-tight md:text-8xl text-balance">Make room for what you already know.</h1>
+                  <p className="mx-auto mt-8 max-w-xl text-lg leading-8 text-muted-foreground lg:mx-0">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p>
                   <div className="mt-10 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
                     <Link href="/quiz" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/25 active:scale-95">Explore readings</Link>
                     <ArrowLink href="/about-tarot">What is tarot?</ArrowLink>
                   </div>
-                </HeroEntrance>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </KeyholeHero>
+        </div>
 
         {/* ── Mirror ────────────────────────────────────── */}
         <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
