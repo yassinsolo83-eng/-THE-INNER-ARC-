@@ -23,7 +23,7 @@ export default async function Home() {
             className="relative flex h-full items-center bg-cover bg-center"
             style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background" />
+            <div className="absolute inset-0 bg-background/20" />
             <div className="relative mx-auto w-full max-w-7xl px-6 py-24 lg:px-10">
               <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
                 {/* Deck: second on mobile (below text), second on desktop (right) */}
