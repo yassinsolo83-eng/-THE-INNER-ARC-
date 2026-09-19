@@ -19,9 +19,9 @@ export function useKeyhole({ setIntroDone }: Setters) {
     const hint = document.getElementById('kh-hint')
 
     const isMobile = window.innerWidth <= 860
-    const MIN = isMobile ? 5.5 : 3.6
-    const MAX = 42
-    const CY = 500
+    const MIN = isMobile ? 9 : 11 // large keyhole filling most of the screen
+    const MAX = 48
+    const CY = 460
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
     const smooth = (x: number) => x * x * (3 - 2 * x)
 
@@ -41,7 +41,7 @@ export function useKeyhole({ setIntroDone }: Setters) {
       ring.setAttribute('transform', tf)
 
       const darkOp = op > 0.92 ? clamp(1 - (op - 0.92) / 0.08, 0, 1) : 1
-      if (darkRect) darkRect.setAttribute('fill-opacity', String(0.9 * darkOp * (1 - op * 0.5)))
+      if (darkRect) darkRect.setAttribute('fill-opacity', String(darkOp))
 
       const uiOp = clamp(1 - op / 0.45, 0, 1)
       ring.setAttribute('opacity', String(uiOp))
