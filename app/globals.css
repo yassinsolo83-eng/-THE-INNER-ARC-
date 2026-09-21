@@ -147,7 +147,7 @@ input, textarea { font-family: inherit; }
 
 /* Background image fills the sticky stage */
 .kh-bg {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; z-index: 1;
   background-size: cover; background-position: center center;
   background-repeat: no-repeat;
 }
