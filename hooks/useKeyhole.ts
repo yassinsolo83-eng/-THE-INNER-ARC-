@@ -32,7 +32,7 @@ export function useKeyhole({ setIntroDone }: Setters) {
       const range = track.offsetHeight - window.innerHeight
       const p = clamp(-rect.top / range, 0, 1)
 
-      const OPEN_AT = 0.75
+      const OPEN_AT = 0.9
       const op = clamp(p / OPEN_AT, 0, 1)
 
       const s = MIN + (MAX - MIN) * smooth(op)
