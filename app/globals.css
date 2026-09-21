@@ -143,7 +143,11 @@ input, textarea { font-family: inherit; }
   position: sticky; top: 0; height: 100vh; height: 100dvh;
   overflow: hidden; background: #070b1e;
 }
-.kh-hero-content { position: absolute; inset: 0; opacity: 1; }
+.kh-hero-content {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100vh; height: 100dvh;
+  opacity: 1;
+}
 .kh-text-out { opacity: 1; }
 .kh-text-in { opacity: 1; }
 
