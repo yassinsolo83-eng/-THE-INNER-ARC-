@@ -144,7 +144,7 @@ input, textarea { font-family: inherit; }
   position: absolute; inset: 0;
   width: 100%; height: 100%;
 }
-.kh-stage .hero > section {
+.kh-stage .hero > div {
   width: 100%; height: 100%;
   background-size: cover !important;
   background-position: center center !important;
