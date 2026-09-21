@@ -1,7 +1,5 @@
-import { KeyholeIntroPage } from '@/components/keyhole-intro-page'
+import { redirect } from 'next/navigation'
 
-export const metadata = { title: 'The Inner Arc — Tarot for the questions that matter' }
-
-export default function IntroPage() {
-  return <KeyholeIntroPage image="/images/hero-cards-candles.jpg" enterHref="/home" />
+export default function RootPage() {
+  redirect('/intro.html')
 }
