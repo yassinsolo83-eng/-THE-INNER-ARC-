@@ -15,7 +15,7 @@ export function KeyholeHero({ children }: { children: React.ReactNode }) {
     <div id="kh-track" className="kh-track">
       <div className="kh-stage">
         {/* The hero content, revealed through the keyhole */}
-        <div className={`kh-hero-content ${introDone ? 'kh-text-in' : 'kh-text-out'}`}>
+        <div className="kh-hero-content">
           {children}
         </div>
 
