@@ -4,16 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 /**
- * Standalone keyhole intro. Fully self-contained — no dependency on the
- * site shell, navbar, or constellation, so nothing can interfere with it.
- *
- * How it works:
- *  - A tall track creates scroll distance.
- *  - A sticky stage fills the screen and holds the fixed background image.
- *  - A dark SVG layer with a keyhole hole sits on top; the hole GROWS from
- *    the exact centre of the screen as you scroll, so it feels like walking
- *    through the door — never drifting up.
- *  - When fully open, we route into the site.
+ * Standalone keyhole intro — zooms a soft keyhole cover toward the viewer
+ * until it swallows the screen, then routes into the site.
+ * Same logic as the approved demo.
  */
 export function KeyholeIntroPage({
   image,
@@ -23,8 +16,7 @@ export function KeyholeIntroPage({
   enterHref?: string
 }) {
   const router = useRouter()
-  const holeRef = useRef<SVGPathElement>(null)
-  const darkRef = useRef<SVGRectElement>(null)
+  const coverRef = useRef<HTMLDivElement>(null)
   const hintRef = useRef<HTMLDivElement>(null)
   const [entered, setEntered] = useState(false)
 
@@ -32,30 +24,19 @@ export function KeyholeIntroPage({
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
     const smooth = (x: number) => x * x * (3 - 2 * x)
 
-    // The keyhole path is drawn around 50,50 in a 100x100 box, so it scales
-    // evenly from its own centre. We anchor growth to the true screen centre.
-    const MIN = 3.2
-    const MAX = 40
-
-    const onScroll = () => {
+    const update = () => {
       const track = document.getElementById('kh-track')
-      const hole = holeRef.current
-      if (!track || !hole) return
-
+      if (!track || !coverRef.current) return
       const range = track.offsetHeight - window.innerHeight
       const p = clamp(window.scrollY / range, 0, 1)
       const op = clamp(p / 0.9, 0, 1)
 
-      const s = MIN + (MAX - MIN) * smooth(op)
-      // grow from screen centre (500,500 in the 1000 viewBox) around the
-      // path centre (50,50) — perfectly centred, no upward drift
-      hole.setAttribute('transform', `translate(500 500) scale(${s}) translate(-50 -50)`)
+      // zoom the dark keyhole cover from small -> huge
+      const s = 0.12 + smooth(op) * 9
+      coverRef.current.style.transform = `translate(-50%, -50%) scale(${s.toFixed(3)})`
+      coverRef.current.style.opacity = op > 0.92 ? String(clamp(1 - (op - 0.92) / 0.08, 0, 1)) : '1'
 
-      if (darkRef.current) {
-        const darkOp = op > 0.82 ? clamp(1 - (op - 0.82) / 0.18, 0, 1) : 1
-        darkRef.current.setAttribute('fill-opacity', String(darkOp))
-      }
-      if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.35, 0, 1))
+      if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
 
       if (op >= 1 && !entered) {
         setEntered(true)
@@ -63,22 +44,19 @@ export function KeyholeIntroPage({
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    update()
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [entered, enterHref, router])
 
   return (
-    <div id="kh-track" style={{ height: '300vh', position: 'relative', background: '#050813' }}>
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Fixed background image — the site behind the door */}
+    <div id="kh-track" style={{ height: '400vh', position: 'relative', background: '#050813' }}>
+      <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
+        {/* Real site image behind the door */}
         <div
           style={{
             position: 'absolute',
@@ -89,37 +67,38 @@ export function KeyholeIntroPage({
           }}
         />
 
-        {/* Dark keyhole overlay */}
-        <svg
-          viewBox="0 0 1000 1000"
-          preserveAspectRatio="xMidYMid slice"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-          aria-hidden="true"
+        {/* Dark keyhole cover that zooms toward the viewer */}
+        <div
+          ref={coverRef}
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            width: '300vmax',
+            height: '300vmax',
+            transformOrigin: 'center center',
+            transform: 'translate(-50%, -50%) scale(0.12)',
+            willChange: 'transform',
+            pointerEvents: 'none',
+          }}
         >
-          <defs>
-            <filter id="kh-soft">
-              <feGaussianBlur stdDeviation="2" />
-            </filter>
-            <mask id="kh-mask">
-              <rect width="1000" height="1000" fill="white" />
-              <path
-                ref={holeRef}
-                fill="black"
-                filter="url(#kh-soft)"
-                transform="translate(500 500) scale(3.2) translate(-50 -50)"
-                d="M50 12 C40 12 32 20 32 31 C32 39 36 45 43 48 L37 84 L63 84 L57 48 C64 45 68 39 68 31 C68 20 60 12 50 12 Z"
-              />
-            </mask>
-          </defs>
-          <rect
-            ref={darkRef}
-            width="1000"
-            height="1000"
-            fill="#050813"
-            fillOpacity="1"
-            mask="url(#kh-mask)"
-          />
-        </svg>
+          <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
+            <defs>
+              <filter id="kh-soft" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" />
+              </filter>
+              <mask id="kh-hole-mask">
+                <rect width="1000" height="1000" fill="white" />
+                <path
+                  fill="black"
+                  filter="url(#kh-soft)"
+                  d="M500 210 C388 210 300 300 300 410 C300 490 345 558 415 590 C405 640 388 690 360 760 C345 795 345 815 380 815 L620 815 C655 815 655 795 640 760 C612 690 595 640 585 590 C655 558 700 490 700 410 C700 300 612 210 500 210 Z"
+                />
+              </mask>
+            </defs>
+            <rect width="1000" height="1000" fill="#050813" mask="url(#kh-hole-mask)" />
+          </svg>
+        </div>
 
         {/* Hint */}
         <div
@@ -133,6 +112,7 @@ export function KeyholeIntroPage({
             fontSize: 12,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
+            fontWeight: 600,
           }}
         >
           Scroll to enter ↓
