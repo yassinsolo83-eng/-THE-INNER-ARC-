@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 /**
- * Standalone keyhole intro — zooms a soft keyhole cover toward the viewer
- * until it swallows the screen, then routes into the site.
- * Same logic as the approved demo.
+ * Keyhole intro — full-screen dark cover with a keyhole punched out.
+ * Scrolling grows the hole until it swallows the screen, then routes in.
+ * Exact logic from the approved demo.
  */
 export function KeyholeIntroPage({
   image,
@@ -28,20 +28,17 @@ export function KeyholeIntroPage({
       const track = document.getElementById('kh-track')
       if (!track || !coverRef.current) return
       const range = track.offsetHeight - window.innerHeight
-      // Guard against a zero/invalid range (before layout settles) which would
-      // make op jump to 1 and redirect instantly on load.
       if (range <= 0) return
       const p = clamp(window.scrollY / range, 0, 1)
       const op = clamp(p / 0.9, 0, 1)
 
-      // zoom the dark keyhole cover from screen-filling -> huge
-      const s = 1 + smooth(op) * 11
+      // hole grows: scale 1 (small keyhole) -> 14 (swallows screen)
+      const s = 1 + smooth(op) * 13
       coverRef.current.style.transform = `scale(${s.toFixed(3)})`
-      coverRef.current.style.opacity = op > 0.92 ? String(clamp(1 - (op - 0.92) / 0.08, 0, 1)) : '1'
+      coverRef.current.style.opacity = op > 0.93 ? String(clamp(1 - (op - 0.93) / 0.07, 0, 1)) : '1'
 
       if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
 
-      // Only enter once the user has genuinely scrolled to the very end.
       if (op >= 1 && window.scrollY > 50 && !entered) {
         setEntered(true)
         router.push(enterHref)
@@ -60,7 +57,7 @@ export function KeyholeIntroPage({
   return (
     <div id="kh-track" style={{ height: '400vh', position: 'relative', background: '#050813' }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden' }}>
-        {/* Real site image behind the door */}
+        {/* Real site image, filling the screen behind the door */}
         <div
           style={{
             position: 'absolute',
@@ -71,33 +68,36 @@ export function KeyholeIntroPage({
           }}
         />
 
-        {/* Dark keyhole cover that zooms toward the viewer */}
+        {/* Full-screen dark cover with the keyhole punched out */}
         <div
           ref={coverRef}
           style={{
             position: 'absolute',
             inset: 0,
-            transformOrigin: 'center 42%',
-            transform: 'scale(1)',
-            willChange: 'transform',
-            pointerEvents: 'none',
+            transformOrigin: '50% 44%',
+            willChange: 'transform, opacity',
           }}
         >
-          <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
+          <svg
+            viewBox="0 0 100 100"
+            preserveAspectRatio="xMidYMid slice"
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
+            aria-hidden="true"
+          >
             <defs>
-              <filter id="kh-soft" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="6" />
+              <filter id="kh-soft">
+                <feGaussianBlur stdDeviation="0.6" />
               </filter>
               <mask id="kh-hole-mask">
-                <rect width="1000" height="1000" fill="white" />
+                <rect width="100" height="100" fill="white" />
                 <path
-                  fill="black"
                   filter="url(#kh-soft)"
-                  d="M500 380 C455 380 420 416 420 460 C420 492 438 519 466 532 C461 552 454 572 442 602 C436 616 436 625 452 625 L548 625 C564 625 564 616 558 602 C546 572 539 552 534 532 C562 519 580 492 580 460 C580 416 545 380 500 380 Z"
+                  fill="black"
+                  d="M50 33 C45.5 33 42 36.6 42 41 C42 44.2 43.8 46.9 46.6 48.2 C46.1 50.2 45.4 52.2 44.2 55.2 C43.6 56.6 43.6 57.5 45.2 57.5 L54.8 57.5 C56.4 57.5 56.4 56.6 55.8 55.2 C54.6 52.2 53.9 50.2 53.4 48.2 C56.2 46.9 58 44.2 58 41 C58 36.6 54.5 33 50 33 Z"
                 />
               </mask>
             </defs>
-            <rect width="1000" height="1000" fill="#050813" mask="url(#kh-hole-mask)" />
+            <rect width="100" height="100" fill="#050813" mask="url(#kh-hole-mask)" />
           </svg>
         </div>
 
@@ -106,7 +106,7 @@ export function KeyholeIntroPage({
           ref={hintRef}
           style={{
             position: 'absolute',
-            bottom: '8%',
+            bottom: '7%',
             left: '50%',
             transform: 'translateX(-50%)',
             color: '#B76E79',
