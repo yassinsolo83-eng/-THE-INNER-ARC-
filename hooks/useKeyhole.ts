@@ -14,11 +14,7 @@ export function useKeyhole({ setIntroDone }: Setters) {
     const isMobile = window.innerWidth <= 860
     const MIN = isMobile ? 5.5 : 3.6
     const MAX = 44
-    // Grow from the CIRCLE's centre (y≈32 in the path), not the path's bbox centre.
-    // This keeps the opening visually anchored so it feels like moving INTO it.
-    const ORIGIN_X = 50
-    const ORIGIN_Y = 32
-    const CY = 460
+    const CY = 500
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
     const smooth = (x: number) => x * x * (3 - 2 * x)
 
@@ -33,16 +29,8 @@ export function useKeyhole({ setIntroDone }: Setters) {
       const op = clamp(p / OPEN_AT, 0, 1)
 
       const s = MIN + (MAX - MIN) * smooth(op)
-      const tf = `translate(500 ${CY}) scale(${s}) translate(${-ORIGIN_X} ${-ORIGIN_Y})`
+      const tf = `translate(500 ${CY}) scale(${s}) translate(-50 -50)`
       hole.setAttribute('transform', tf)
-
-      // Fade the dark surround out over the last part of the open so the
-      // hero image behind blends smoothly into the real page (no black gap).
-      const darkRect = document.getElementById('kh-dark')
-      if (darkRect) {
-        const darkOp = op > 0.8 ? clamp(1 - (op - 0.8) / 0.2, 0, 1) : 1
-        darkRect.setAttribute('fill-opacity', String(darkOp))
-      }
 
       const uiOp = clamp(1 - op / 0.4, 0, 1)
       if (hint) hint.style.opacity = String(uiOp)
