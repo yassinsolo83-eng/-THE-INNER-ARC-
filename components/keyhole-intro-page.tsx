@@ -31,9 +31,9 @@ export function KeyholeIntroPage({
       const p = clamp(window.scrollY / range, 0, 1)
       const op = clamp(p / 0.9, 0, 1)
 
-      // zoom the dark keyhole cover from small -> huge
-      const s = 0.12 + smooth(op) * 9
-      coverRef.current.style.transform = `translate(-50%, -50%) scale(${s.toFixed(3)})`
+      // zoom the dark keyhole cover from screen-filling -> huge
+      const s = 1 + smooth(op) * 11
+      coverRef.current.style.transform = `scale(${s.toFixed(3)})`
       coverRef.current.style.opacity = op > 0.92 ? String(clamp(1 - (op - 0.92) / 0.08, 0, 1)) : '1'
 
       if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
@@ -72,17 +72,14 @@ export function KeyholeIntroPage({
           ref={coverRef}
           style={{
             position: 'absolute',
-            left: '50%',
-            top: '50%',
-            width: '300vmax',
-            height: '300vmax',
-            transformOrigin: 'center center',
-            transform: 'translate(-50%, -50%) scale(0.12)',
+            inset: 0,
+            transformOrigin: 'center 42%',
+            transform: 'scale(1)',
             willChange: 'transform',
             pointerEvents: 'none',
           }}
         >
-          <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
+          <svg viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%', display: 'block' }} aria-hidden="true">
             <defs>
               <filter id="kh-soft" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="6" />
@@ -92,7 +89,7 @@ export function KeyholeIntroPage({
                 <path
                   fill="black"
                   filter="url(#kh-soft)"
-                  d="M500 210 C388 210 300 300 300 410 C300 490 345 558 415 590 C405 640 388 690 360 760 C345 795 345 815 380 815 L620 815 C655 815 655 795 640 760 C612 690 595 640 585 590 C655 558 700 490 700 410 C700 300 612 210 500 210 Z"
+                  d="M500 380 C455 380 420 416 420 460 C420 492 438 519 466 532 C461 552 454 572 442 602 C436 616 436 625 452 625 L548 625 C564 625 564 616 558 602 C546 572 539 552 534 532 C562 519 580 492 580 460 C580 416 545 380 500 380 Z"
                 />
               </mask>
             </defs>
