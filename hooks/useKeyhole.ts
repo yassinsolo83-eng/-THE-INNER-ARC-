@@ -6,22 +6,18 @@ type Setters = {
   setIntroDone: (v: boolean) => void
 }
 
-/**
- * Scroll-driven keyhole intro.
- * The keyhole grows as the user scrolls through #kh-track,
- * finishing at 75% of the track (last 25% holds the revealed hero).
- */
 export function useKeyhole({ setIntroDone }: Setters) {
   useEffect(() => {
     const hole = document.getElementById('kh-hole')
     const ring = document.getElementById('kh-ring')
     const darkRect = document.getElementById('kh-dark')
     const hint = document.getElementById('kh-hint')
+    const frost = document.getElementById('kh-frost')
 
     const isMobile = window.innerWidth <= 860
-    const MIN = isMobile ? 4 : 5
-    const MAX = 46
-    const CY = 500 // vertical center of the viewBox — keyhole grows from screen center
+    const MIN = isMobile ? 5.5 : 3.6
+    const MAX = 42
+    const CY = 500
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
     const smooth = (x: number) => x * x * (3 - 2 * x)
 
@@ -32,7 +28,7 @@ export function useKeyhole({ setIntroDone }: Setters) {
       const range = track.offsetHeight - window.innerHeight
       const p = clamp(-rect.top / range, 0, 1)
 
-      const OPEN_AT = 0.9
+      const OPEN_AT = 0.75
       const op = clamp(p / OPEN_AT, 0, 1)
 
       const s = MIN + (MAX - MIN) * smooth(op)
@@ -41,7 +37,13 @@ export function useKeyhole({ setIntroDone }: Setters) {
       ring.setAttribute('transform', tf)
 
       const darkOp = op > 0.92 ? clamp(1 - (op - 0.92) / 0.08, 0, 1) : 1
-      if (darkRect) darkRect.setAttribute('fill-opacity', String(darkOp))
+      if (darkRect) darkRect.setAttribute('fill-opacity', String(0.9 * darkOp * (1 - op * 0.5)))
+
+      if (frost) {
+        const blur = (1 - op) * 28
+        frost.style.setProperty('--kh-blur', `${blur.toFixed(1)}px`)
+        frost.style.setProperty('--kh-frost-op', String(darkOp))
+      }
 
       const uiOp = clamp(1 - op / 0.45, 0, 1)
       ring.setAttribute('opacity', String(uiOp))
