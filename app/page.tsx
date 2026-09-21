@@ -16,14 +16,9 @@ export default async function Home() {
   return (
     <SiteShell>
       <main>
-        {/* ── Keyhole intro: clean full-screen image, opens on scroll ─── */}
+        {/* ── Keyhole intro: fixed website behind the door, opens on scroll ─── */}
         <div className="-mt-[72px]">
-          <KeyholeHero>
-            <div
-              className="h-full w-full bg-cover bg-center"
-              style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
-            />
-          </KeyholeHero>
+          <KeyholeHero image="/images/hero-cards-candles.jpg" />
         </div>
 
         {/* ── Hero (full content, appears after the keyhole opens) ────── */}
