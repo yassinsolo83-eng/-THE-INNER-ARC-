@@ -30,7 +30,7 @@ export function KeyholeHero({ image }: { image: string }) {
                   id="kh-hole"
                   fill="black"
                   filter="url(#kh-soft)"
-                  transform="translate(500 500) scale(3.6) translate(-50 -50)"
+                  transform="translate(500 460) scale(3.6) translate(-50 -32)"
                   d={KEYHOLE_PATH}
                 />
               </mask>
