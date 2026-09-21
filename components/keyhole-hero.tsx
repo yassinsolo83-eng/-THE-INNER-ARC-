@@ -1,68 +1,44 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { useKeyhole } from '@/hooks/useKeyhole'
 
-/**
- * Keyhole intro that ZOOMS the dark keyhole layer toward the viewer
- * until it clears the screen — revealing the site behind it.
- * Simpler and reliable: one SVG that scales up with scroll.
- */
+const KEYHOLE_PATH =
+  'M50 8 C38 8 28 18 28 32 C28 42 34 50 42 54 L34 88 L66 88 L58 54 C66 50 72 42 72 32 C72 18 62 8 50 8 Z'
+
 export function KeyholeHero({ image }: { image: string }) {
-  const overlayRef = useRef<HTMLDivElement>(null)
-  const hintRef = useRef<HTMLDivElement>(null)
-  const [done, setDone] = useState(false)
-
-  useEffect(() => {
-    const track = document.getElementById('kh-track')
-    const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
-    const smooth = (x: number) => x * x * (3 - 2 * x)
-
-    const update = () => {
-      if (!track || !overlayRef.current) return
-      const rect = track.getBoundingClientRect()
-      const range = track.offsetHeight - window.innerHeight
-      const p = clamp(-rect.top / range, 0, 1)
-      const op = clamp(p / 0.85, 0, 1)
-
-      // scale the whole dark keyhole layer up massively as we scroll in
-      const scale = 1 + smooth(op) * 22
-      overlayRef.current.style.transform = `scale(${scale})`
-      overlayRef.current.style.opacity = op > 0.9 ? String(clamp(1 - (op - 0.9) / 0.1, 0, 1)) : '1'
-
-      if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.35, 0, 1))
-      setDone(op >= 1)
-    }
-
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    update()
-    return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
-    }
-  }, [])
+  const [introDone, setIntroDone] = useState(false)
+  useKeyhole({ setIntroDone })
 
   return (
     <div id="kh-track" className="kh-track">
       <div className="kh-stage">
-        {/* Site image sits behind, filling the screen */}
-        <div className="kh-bg" style={{ backgroundImage: `url(${image})` }} />
+        {/* Background image fills the sticky stage (which fills the screen) */}
+        <div
+          className="kh-bg"
+          style={{ backgroundImage: `url(${image})` }}
+        />
 
-        {/* Dark keyhole layer that zooms toward the viewer */}
-        <div ref={overlayRef} className={`kh-zoom ${done ? 'kh-open' : ''}`}>
-          <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        {/* Keyhole overlay */}
+        <div className={`kh-overlay ${introDone ? 'kh-open' : ''}`}>
+          <svg className="kh-svg" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1000 1000" aria-hidden="true">
             <defs>
+              <filter id="kh-soft"><feGaussianBlur stdDeviation="2.5" /></filter>
               <mask id="kh-mask">
-                <rect width="100" height="100" fill="white" />
-                {/* keyhole hole (transparent center) */}
-                <path fill="black" d="M50 30 C44 30 39 35 39 41 C39 45 41 48 44 50 L41 62 L59 62 L56 50 C59 48 61 45 61 41 C61 35 56 30 50 30 Z" />
+                <rect width="1000" height="1000" fill="white" />
+                <path
+                  id="kh-hole"
+                  fill="black"
+                  filter="url(#kh-soft)"
+                  transform="translate(500 500) scale(3.6) translate(-50 -50)"
+                  d={KEYHOLE_PATH}
+                />
               </mask>
             </defs>
-            <rect width="100" height="100" fill="#070b1e" mask="url(#kh-mask)" />
+            <rect id="kh-dark" width="1000" height="1000" fill="#070b1e" fillOpacity="1" mask="url(#kh-mask)" />
           </svg>
+          <div id="kh-hint" className="kh-hint">Scroll to enter <span>↓</span></div>
         </div>
-
-        <div ref={hintRef} className="kh-hint">Scroll to enter <span>↓</span></div>
       </div>
     </div>
   )
