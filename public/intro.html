@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Inner Arc</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background:#050813; }
+  .track { height:400vh; position:relative; }
+  .stage { position:sticky; top:0; height:100vh; overflow:hidden; }
+  /* real site image behind the door */
+  .bg {
+    position:absolute; inset:0;
+    background-image:url('/images/hero-cards-candles.jpg');
+    background-size:cover; background-position:center;
+  }
+  /* full-screen dark cover with a keyhole punched out */
+  .cover {
+    position:absolute; inset:0;
+    transform-origin:50% 44%;
+    will-change:transform, opacity;
+  }
+  .cover svg { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .hint {
+    position:absolute; bottom:7%; left:50%; transform:translateX(-50%);
+    color:#B76E79; font:600 12px/1 system-ui, sans-serif; letter-spacing:.22em;
+    text-transform:uppercase; z-index:5;
+  }
+</style>
+</head>
+<body>
+  <div class="track" id="track">
+    <div class="stage">
+      <div class="bg"></div>
+      <div class="cover" id="cover">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <filter id="soft"><feGaussianBlur stdDeviation="0.6"/></filter>
+            <mask id="hole">
+              <rect width="100" height="100" fill="white"/>
+              <path filter="url(#soft)" fill="black" d="
+                M50 33 C45.5 33 42 36.6 42 41 C42 44.2 43.8 46.9 46.6 48.2
+                C46.1 50.2 45.4 52.2 44.2 55.2 C43.6 56.6 43.6 57.5 45.2 57.5
+                L54.8 57.5 C56.4 57.5 56.4 56.6 55.8 55.2 C54.6 52.2 53.9 50.2 53.4 48.2
+                C56.2 46.9 58 44.2 58 41 C58 36.6 54.5 33 50 33 Z"/>
+            </mask>
+          </defs>
+          <rect width="100" height="100" fill="#050813" mask="url(#hole)"/>
+        </svg>
+      </div>
+      <div class="hint" id="hint">Scroll to enter &darr;</div>
+    </div>
+  </div>
+
+  <script>
+    var track=document.getElementById('track'),
+        cover=document.getElementById('cover'),
+        hint=document.getElementById('hint');
+    function clamp(v,a,b){return Math.min(b,Math.max(a,v));}
+    function smooth(x){return x*x*(3-2*x);}
+    var entered=false;
+    function update(){
+      var range=track.offsetHeight-window.innerHeight;
+      if(range<=0)return;
+      var p=clamp(window.scrollY/range,0,1);
+      var op=clamp(p/0.9,0,1);
+      var s=1+smooth(op)*13;
+      cover.style.transform='scale('+s.toFixed(3)+')';
+      cover.style.opacity=op>0.93?String(clamp(1-(op-0.93)/0.07,0,1)):'1';
+      hint.style.opacity=String(clamp(1-op/0.3,0,1));
+      if(op>=1 && window.scrollY>50 && !entered){
+        entered=true;
+        window.location.href='/home';
+      }
+    }
+    window.addEventListener('scroll',update,{passive:true});
+    window.addEventListener('resize',update);
+    update();
+  </script>
+</body>
+</html>
