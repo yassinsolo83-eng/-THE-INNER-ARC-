@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useKeyhole } from '@/hooks/useKeyhole'
 
-// Keyhole shape (circle + tapered stem), same viewBox convention as Nefertiti's ankh
 const KEYHOLE_PATH =
   'M50 8 C38 8 28 18 28 32 C28 42 34 50 42 54 L34 88 L66 88 L58 54 C66 50 72 42 72 32 C72 18 62 8 50 8 Z'
 
@@ -14,12 +13,12 @@ export function KeyholeHero({ children }: { children: React.ReactNode }) {
   return (
     <div id="kh-track" className="kh-track">
       <div className="kh-stage">
-        {/* Hero content (image) sits absolutely inside the stage */}
-        <section className="hero">
+        {/* Hero fills the whole stage */}
+        <div className="hero">
           {children}
-        </section>
+        </div>
 
-        {/* Frosted glass — blurs the hero while the keyhole is closed */}
+        {/* Frosted glass while keyhole is closed */}
         <div id="kh-frost" className={`kh-frost ${introDone ? 'kh-open' : ''}`} />
 
         {/* Keyhole overlay */}
