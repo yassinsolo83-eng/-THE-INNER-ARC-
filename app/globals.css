@@ -137,21 +137,19 @@ input, textarea { font-family: inherit; }
   a, button { -webkit-tap-highlight-color: rgba(212,165,165,0.1); }
 }
 
-/* ── Keyhole scroll intro ──────────────────────────── */
+/* ── Keyhole scroll intro (Nefertiti method) ───────── */
 .kh-track { height: 300vh; position: relative; }
-.kh-stage {
-  position: sticky; top: 0; height: 100vh; height: 100dvh;
-  overflow: hidden; background: #070b1e;
-}
-.kh-hero-content {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100vh; height: 100dvh;
-  opacity: 1;
-}
-.kh-text-out { opacity: 1; }
-.kh-text-in { opacity: 1; }
+.kh-stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; background: #070b1e; }
+.kh-stage .hero { position: absolute; inset: 0; min-height: 100%; }
 
-.kh-overlay { position: absolute; inset: 0; z-index: 40; pointer-events: none; }
+.kh-frost {
+  position: absolute; inset: 0; z-index: 13; pointer-events: none;
+  backdrop-filter: blur(var(--kh-blur, 28px));
+  -webkit-backdrop-filter: blur(var(--kh-blur, 28px));
+  opacity: var(--kh-frost-op, 1);
+}
+.kh-frost.kh-open { display: none; }
+.kh-overlay { position: absolute; inset: 0; z-index: 15; pointer-events: none; }
 .kh-overlay.kh-open { display: none; }
 .kh-svg {
   position: absolute; inset: 0; width: 100%; height: 100%;
@@ -159,7 +157,7 @@ input, textarea { font-family: inherit; }
 }
 .kh-hint {
   position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%);
-  z-index: 16; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  z-index: 16; font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
   color: #B76E79; pointer-events: none; animation: kh-bob 1.6s ease-in-out infinite;
 }
 .kh-hint span { margin-left: 6px; }
