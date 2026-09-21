@@ -28,6 +28,9 @@ export function KeyholeIntroPage({
       const track = document.getElementById('kh-track')
       if (!track || !coverRef.current) return
       const range = track.offsetHeight - window.innerHeight
+      // Guard against a zero/invalid range (before layout settles) which would
+      // make op jump to 1 and redirect instantly on load.
+      if (range <= 0) return
       const p = clamp(window.scrollY / range, 0, 1)
       const op = clamp(p / 0.9, 0, 1)
 
@@ -38,7 +41,8 @@ export function KeyholeIntroPage({
 
       if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
 
-      if (op >= 1 && !entered) {
+      // Only enter once the user has genuinely scrolled to the very end.
+      if (op >= 1 && window.scrollY > 50 && !entered) {
         setEntered(true)
         router.push(enterHref)
       }
