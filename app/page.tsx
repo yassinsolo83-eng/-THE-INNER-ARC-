@@ -20,7 +20,7 @@ export default async function Home() {
         <div className="-mt-[72px]">
         <KeyholeHero>
           <section
-            className="relative flex h-full items-center bg-cover bg-center"
+            className="absolute inset-0 flex items-center bg-cover bg-center"
             style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
           >
             <div className="absolute inset-0 bg-background/20" />
