@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useKeyhole } from '@/hooks/useKeyhole'
 
-// Keyhole path — a classic keyhole shape (circle + tapered stem)
+// Keyhole shape (circle + tapered stem), same viewBox convention as Nefertiti's ankh
 const KEYHOLE_PATH =
   'M50 8 C38 8 28 18 28 32 C28 42 34 50 42 54 L34 88 L66 88 L58 54 C66 50 72 42 72 32 C72 18 62 8 50 8 Z'
 
@@ -14,10 +14,13 @@ export function KeyholeHero({ children }: { children: React.ReactNode }) {
   return (
     <div id="kh-track" className="kh-track">
       <div className="kh-stage">
-        {/* The hero content, revealed through the keyhole */}
-        <div className="kh-hero-content">
+        {/* Hero content (image) sits absolutely inside the stage */}
+        <section className="hero">
           {children}
-        </div>
+        </section>
+
+        {/* Frosted glass — blurs the hero while the keyhole is closed */}
+        <div id="kh-frost" className={`kh-frost ${introDone ? 'kh-open' : ''}`} />
 
         {/* Keyhole overlay */}
         <div className={`kh-overlay ${introDone ? 'kh-open' : ''}`}>
@@ -28,18 +31,18 @@ export function KeyholeHero({ children }: { children: React.ReactNode }) {
                 <path
                   id="kh-hole"
                   fill="black"
-                  transform="translate(500 500) scale(5) translate(-50 -50)"
+                  transform="translate(500 500) scale(3.6) translate(-50 -50)"
                   d={KEYHOLE_PATH}
                 />
               </mask>
             </defs>
-            <rect id="kh-dark" width="1000" height="1000" fill="#0F1229" fillOpacity="1" mask="url(#kh-mask)" />
+            <rect id="kh-dark" width="1000" height="1000" fill="#070b1e" fillOpacity="0.9" mask="url(#kh-mask)" />
             <path
               id="kh-ring"
               fill="none"
               stroke="#B76E79"
-              strokeWidth="1.4"
-              transform="translate(500 500) scale(5) translate(-50 -50)"
+              strokeWidth="1.2"
+              transform="translate(500 500) scale(3.6) translate(-50 -50)"
               d={KEYHOLE_PATH}
             />
           </svg>
