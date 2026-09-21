@@ -140,7 +140,15 @@ input, textarea { font-family: inherit; }
 /* ── Keyhole scroll intro (Nefertiti method) ───────── */
 .kh-track { height: 300vh; position: relative; }
 .kh-stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; background: #070b1e; }
-.kh-stage .hero { position: absolute; inset: 0; min-height: 100%; }
+.kh-stage .hero {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+}
+.kh-stage .hero > section {
+  width: 100%; height: 100%;
+  background-size: cover !important;
+  background-position: center center !important;
+}
 
 .kh-frost {
   position: absolute; inset: 0; z-index: 13; pointer-events: none;
