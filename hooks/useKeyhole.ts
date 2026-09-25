@@ -4,15 +4,10 @@ import { useEffect } from 'react'
 
 type Setters = {
   setIntroDone: (v: boolean) => void
+  setScrolled?: (v: boolean) => void
 }
 
-/**
- * Drives the scroll-based keyhole intro (Nefertiti method):
- *  - the keyhole grows as the user scrolls through #kh-track (opens)
- *  - scrolling back up shrinks it (closes)
- *  - finishes opening at 75% of the track, holding the hero for the last 25%
- */
-export function useKeyhole({ setIntroDone }: Setters) {
+export function useKeyhole({ setIntroDone, setScrolled }: Setters) {
   useEffect(() => {
     const hole = document.getElementById('kh-hole')
     const ring = document.getElementById('kh-ring')
@@ -55,6 +50,7 @@ export function useKeyhole({ setIntroDone }: Setters) {
       ring.setAttribute('opacity', String(uiOp))
       if (hint) hint.style.opacity = String(uiOp)
 
+      if (setScrolled) setScrolled(op >= 0.5)
       setIntroDone(op >= 1)
     }
 
@@ -68,5 +64,5 @@ export function useKeyhole({ setIntroDone }: Setters) {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', updateKeyhole)
     }
-  }, [setIntroDone])
+  }, [setIntroDone, setScrolled])
 }

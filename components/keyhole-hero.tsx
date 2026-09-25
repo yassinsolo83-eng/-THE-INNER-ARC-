@@ -1,28 +1,36 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { useKeyhole } from '@/hooks/useKeyhole'
 
-// Classic keyhole shape (circle head + flaring stem), drawn around 50,50
 const KH = 'M50 8 C38 8 28 18 28 32 C28 42 34 50 42 54 L34 88 L66 88 L58 54 C66 50 72 42 72 32 C72 18 62 8 50 8 Z'
 
-export function KeyholeHero({ image }: { image: string }) {
-  const [introDone, setIntroDone] = useState(false)
-  useKeyhole({ setIntroDone })
+export function KeyholeHero({
+  image,
+  introDone,
+  setIntroDone,
+  setScrolled,
+}: {
+  image: string
+  introDone: boolean
+  setIntroDone: (v: boolean) => void
+  setScrolled: (v: boolean) => void
+}) {
+  useKeyhole({ setIntroDone, setScrolled })
 
   return (
     <div id="kh-track" className="kh-track">
       <div className="kh-stage">
-        {/* Hero (the site behind the door) */}
-        <section className="kh-hero" style={{ backgroundImage: `url(${image})` }}>
+        {/* Hero — the site behind the door, fills the stage */}
+        <section className="kh-hero">
+          <div className="kh-hero-image" style={{ backgroundImage: `url(${image})` }} />
           <div className="kh-hero-shade" />
           <div className={`kh-hero-content ${introDone ? 'kh-text-in' : 'kh-text-out'}`}>
             <p className="text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
-            <h1 className="mt-4 font-serif text-5xl leading-[0.98] text-foreground md:text-7xl">
+            <h1 className="mt-4 font-serif text-5xl leading-[0.98] text-white md:text-7xl">
               Make room for what you already know.
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+            <p className="mt-6 max-w-xl text-lg text-white/80">
               Private readings for moments of change, curiosity, and return.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
