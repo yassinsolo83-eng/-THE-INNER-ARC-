@@ -1,33 +1,44 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLink, NewsletterForm, SectionHeading, Footer, Navbar } from '@/components/site'
+import { ArrowLink, NewsletterForm, SectionHeading, Footer } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { Constellation } from '@/components/constellation'
-import { KeyholeHero } from '@/components/keyhole-hero'
+import { KeyholeZoom } from '@/components/keyhole-zoom'
 
 export function HomeClient({ services, testimonials }: { services: any[]; testimonials: any[] }) {
-  const [introDone, setIntroDone] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-
   return (
     <>
       <Constellation />
-      {/* Navbar shown only after the keyhole opens */}
-      <div style={{ opacity: scrolled ? 1 : 0, pointerEvents: scrolled ? 'auto' : 'none', transition: 'opacity .5s ease' }}>
-        <Navbar />
-      </div>
 
       <main>
-        {/* ── Keyhole intro (the whole site opens from here) ── */}
-        <KeyholeHero
-          image="/images/hero-cards-candles.jpg"
-          introDone={introDone}
-          setIntroDone={setIntroDone}
-          setScrolled={setScrolled}
-        />
+        {/* ── KEYHOLE INTRO — zoom to enter, scroll up to close ── */}
+        <div id="kz-track" className="kz-track">
+          <div className="kz-stage">
+            {/* the site's hero image, revealed through the keyhole */}
+            <div
+              className="kz-bg"
+              style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
+            />
+            {/* dark cover with the keyhole punched out (zooms with scroll) */}
+            <KeyholeZoom />
+          </div>
+        </div>
+
+        {/* ── Hero copy (appears as you enter) ───────────── */}
+        <section className="relative z-10 flex min-h-[70vh] items-center bg-cover bg-center" style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background" />
+          <div className="relative mx-auto w-full max-w-7xl px-6 py-20 lg:px-10">
+            <p className="text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
+            <h1 className="shimmer mt-4 font-serif text-5xl leading-[0.98] tracking-tight md:text-7xl">Make room for what you already know.</h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p>
+            <div className="mt-8 flex flex-wrap items-center gap-6">
+              <Link href="/quiz" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg">Explore readings</Link>
+              <ArrowLink href="/about-tarot">What is tarot?</ArrowLink>
+            </div>
+          </div>
+        </section>
 
         {/* ── Mirror ────────────────────────────────────── */}
         <section className="relative z-10 mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
