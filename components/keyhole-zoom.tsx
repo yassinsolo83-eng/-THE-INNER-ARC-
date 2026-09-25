@@ -33,6 +33,14 @@ export function KeyholeZoom() {
       coverRef.current.style.opacity = op > 0.93 ? String(clamp(1 - (op - 0.93) / 0.07, 0, 1)) : '1'
 
       if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
+
+      // fade the hero copy in as the keyhole opens
+      const copy = document.getElementById('kz-copy')
+      if (copy) {
+        const copyOp = clamp((op - 0.35) / 0.4, 0, 1)
+        copy.style.opacity = String(copyOp)
+        copy.style.transform = `translateY(${(1 - copyOp) * 20}px)`
+      }
     }
 
     window.addEventListener('scroll', update, { passive: true })

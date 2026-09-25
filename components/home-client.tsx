@@ -16,29 +16,30 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
         {/* ── KEYHOLE INTRO — zoom to enter, scroll up to close ── */}
         <div id="kz-track" className="kz-track">
           <div className="kz-stage">
-            {/* the site's hero image, revealed through the keyhole */}
-            <div
+            {/* hero video, revealed through the keyhole */}
+            <video
               className="kz-bg"
-              style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}
+              src="/hero-video.mp4"
+              poster="/images/hero-cards-candles.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
             />
+            {/* text over the video — fades in as the keyhole opens */}
+            <div id="kz-copy" className="kz-copy">
+              <p className="text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
+              <h1 className="mt-4 font-serif text-5xl leading-[0.98] tracking-tight text-white md:text-7xl">Make room for what you already know.</h1>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-white/80">Private readings for moments of change, curiosity, and return.</p>
+              <div className="mt-8 flex flex-wrap items-center gap-6">
+                <Link href="/quiz" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg">Explore readings</Link>
+              </div>
+            </div>
             {/* dark cover with the keyhole punched out (zooms with scroll) */}
             <KeyholeZoom />
           </div>
         </div>
-
-        {/* ── Hero copy (appears as you enter) ───────────── */}
-        <section className="relative z-10 flex min-h-[70vh] items-center bg-cover bg-center" style={{ backgroundImage: 'url(/images/hero-cards-candles.jpg)' }}>
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/80 to-background" />
-          <div className="relative mx-auto w-full max-w-7xl px-6 py-20 lg:px-10">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent">A considered approach to tarot</p>
-            <h1 className="shimmer mt-4 font-serif text-5xl leading-[0.98] tracking-tight md:text-7xl">Make room for what you already know.</h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">Private readings for moments of change, curiosity, and return. Not a prediction — a place to hear yourself more clearly.</p>
-            <div className="mt-8 flex flex-wrap items-center gap-6">
-              <Link href="/quiz" className="rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-all hover:-translate-y-0.5 hover:shadow-lg">Explore readings</Link>
-              <ArrowLink href="/about-tarot">What is tarot?</ArrowLink>
-            </div>
-          </div>
-        </section>
 
         {/* ── Mirror ────────────────────────────────────── */}
         <section className="relative z-10 mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
