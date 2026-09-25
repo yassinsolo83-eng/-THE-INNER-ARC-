@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLink, NewsletterForm, SectionHeading, Footer } from '@/components/site'
+import { ArrowLink, NewsletterForm, SectionHeading, Footer, Navbar } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { Constellation } from '@/components/constellation'
 import { KeyholeZoom } from '@/components/keyhole-zoom'
@@ -11,6 +11,7 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
   return (
     <>
       <Constellation />
+      <Navbar />
 
       <main>
         {/* ── KEYHOLE INTRO — zoom to enter, scroll up to close ── */}
@@ -93,7 +94,7 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
         </section>
 
         {/* ── Newsletter CTA ────────────────────────────── */}
-        <section className="relative z-10 min-h-[420px] bg-cover bg-center lg:min-h-[500px]" style={{ backgroundImage: 'url(/images/newsletter-cta.jpg)' }}>
+        <section className="relative z-10 min-h-[420px] bg-cover bg-center bg-fixed lg:min-h-[500px]" style={{ backgroundImage: 'url(/images/newsletter-cta.jpg)' }}>
           <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/65 to-transparent" />
           <Reveal animation="fade-up">
             <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[500px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
