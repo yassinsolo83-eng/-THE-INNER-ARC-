@@ -139,10 +139,16 @@ input, textarea { font-family: inherit; }
 .kz-track { height: 400vh; position: relative; }
 .kz-stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; }
 /* the site image behind the door */
-.kz-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.kz-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 /* full-screen dark cover that zooms; the hole is punched out */
 .kz-cover { position: absolute; inset: 0; transform-origin: 50% 44%; will-change: transform, opacity; z-index: 20; }
 .kz-cover svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.kz-copy {
+  position: absolute; left: 8vw; bottom: 14vh; z-index: 10; max-width: 900px;
+  opacity: 0; transform: translateY(20px); pointer-events: none;
+}
+.kz-copy a { pointer-events: auto; }
+@media (max-width: 860px) { .kz-copy { left: 6vw; right: 6vw; bottom: 16vh; } }
 .kz-hint {
   position: absolute; bottom: 7%; left: 50%; transform: translateX(-50%);
   color: #B76E79; font-size: 12px; letter-spacing: .22em; text-transform: uppercase; font-weight: 600;
