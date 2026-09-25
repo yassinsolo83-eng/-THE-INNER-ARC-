@@ -41,6 +41,14 @@ export function KeyholeZoom() {
         copy.style.opacity = String(copyOp)
         copy.style.transform = `translateY(${(1 - copyOp) * 20}px)`
       }
+
+      // show the navbar only once the keyhole has opened
+      const nav = document.querySelector('header') as HTMLElement | null
+      if (nav) {
+        nav.style.opacity = op >= 1 ? '1' : '0'
+        nav.style.pointerEvents = op >= 1 ? 'auto' : 'none'
+        nav.style.transition = 'opacity .4s ease'
+      }
     }
 
     window.addEventListener('scroll', update, { passive: true })
