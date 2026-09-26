@@ -13,8 +13,6 @@ import { useEffect, useRef } from 'react'
  * - one update per animation frame (requestAnimationFrame) instead of per scroll event
  * - DOM nodes looked up once, not on every scroll
  * - styles only written when the value actually changes
- * - the cover is promoted to its own GPU layer (translate3d) so zooming it
- *   does not force the browser to re-render the SVG blur every frame
  *
  * Fires a one-time `keyhole:open` window event the first time it fully opens.
  */
@@ -55,10 +53,8 @@ export function KeyholeZoom() {
 
       // hole grows: scale 1 (small keyhole) -> 14 (swallows screen)
       const s = 1 + smooth(op) * 13
-      cover.style.transform = `translate3d(0,0,0) scale(${s.toFixed(3)})`
+      cover.style.transform = `scale(${s.toFixed(3)})`
       cover.style.opacity = op > 0.93 ? String(clamp(1 - (op - 0.93) / 0.07, 0, 1)) : '1'
-      // once fully open the cover is invisible, so stop painting it at all
-      cover.style.visibility = op >= 1 ? 'hidden' : 'visible'
 
       if (hint) hint.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
 
