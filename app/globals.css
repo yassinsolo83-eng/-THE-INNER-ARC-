@@ -144,14 +144,7 @@ input, textarea { font-family: inherit; }
 /* the site image behind the door */
 .kz-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 /* full-screen dark cover that zooms; the hole is punched out */
-.kz-cover {
-  position: absolute; inset: 0; transform-origin: 50% 44%; z-index: 20;
-  will-change: transform, opacity;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  contain: strict;
-}
+.kz-cover { position: absolute; inset: 0; transform-origin: 50% 44%; will-change: transform, opacity; z-index: 20; }
 .kz-cover svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .kz-copy {
   position: absolute; left: 8vw; bottom: 14vh; z-index: 10; max-width: 900px;
