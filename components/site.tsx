@@ -19,7 +19,7 @@ const navItems = [
   { href: '/privacy', label: 'Privacy' },
 ]
 
-function ScrollToTop() {
+export function ScrollToTop() {
   const pathname = usePathname()
   const [showButton, setShowButton] = useState(false)
 

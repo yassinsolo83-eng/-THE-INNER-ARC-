@@ -150,7 +150,7 @@ export function ReadingEditor({ initialReports }: { initialReports: any[] }) {
                           rows={8}
                           dir="rtl"
                           className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
-                          placeholder="اكتب القراءة بالعربي هنا..."
+                          placeholder="Write the Arabic reading here…"
                         />
                       </div>
                       <div className="flex gap-3">

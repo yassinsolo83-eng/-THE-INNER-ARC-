@@ -6,10 +6,17 @@ import { useEffect, useRef } from 'react'
  * The APPROVED zoom keyhole. A full-screen dark cover with a keyhole hole
  * punched out sits on top of the site. Scrolling zooms the cover toward the
  * viewer so the hole swallows the screen (opens); scrolling up shrinks it
- * back (closes). This is the exact logic from the demo the user approved.
+ * back (closes).
  *
- * It lives at the very top of the page. Below it, the real site content
- * flows in the same page — no separate route.
+ * The artwork (SVG path, blur, colours) and the scroll math are unchanged
+ * from the approved demo. Only the plumbing is optimised:
+ * - one update per animation frame (requestAnimationFrame) instead of per scroll event
+ * - DOM nodes looked up once, not on every scroll
+ * - styles only written when the value actually changes
+ * - the cover is promoted to its own GPU layer (translate3d) so zooming it
+ *   does not force the browser to re-render the SVG blur every frame
+ *
+ * Fires a one-time `keyhole:open` window event the first time it fully opens.
  */
 export function KeyholeZoom() {
   const coverRef = useRef<HTMLDivElement>(null)
@@ -19,44 +26,92 @@ export function KeyholeZoom() {
     const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v))
     const smooth = (x: number) => x * x * (3 - 2 * x)
 
-    const update = () => {
-      const track = document.getElementById('kz-track')
-      if (!track || !coverRef.current) return
-      const range = track.offsetHeight - window.innerHeight
+    const cover = coverRef.current
+    const hint = hintRef.current
+    const track = document.getElementById('kz-track')
+    const copy = document.getElementById('kz-copy')
+    const nav = document.querySelector('header') as HTMLElement | null
+    if (!cover || !track) return
+
+    if (nav) nav.style.transition = 'opacity .4s ease'
+
+    let range = 0
+    let frame = 0
+    let lastP = -1
+    let navOpen: boolean | null = null
+    let announced = false
+
+    const measure = () => {
+      range = track.offsetHeight - window.innerHeight
+    }
+
+    const render = () => {
+      frame = 0
       if (range <= 0) return
       const p = clamp(window.scrollY / range, 0, 1)
+      if (p === lastP) return
+      lastP = p
       const op = clamp(p / 0.9, 0, 1)
 
       // hole grows: scale 1 (small keyhole) -> 14 (swallows screen)
       const s = 1 + smooth(op) * 13
-      coverRef.current.style.transform = `scale(${s.toFixed(3)})`
-      coverRef.current.style.opacity = op > 0.93 ? String(clamp(1 - (op - 0.93) / 0.07, 0, 1)) : '1'
+      cover.style.transform = `translate3d(0,0,0) scale(${s.toFixed(3)})`
+      cover.style.opacity = op > 0.93 ? String(clamp(1 - (op - 0.93) / 0.07, 0, 1)) : '1'
+      // once fully open the cover is invisible, so stop painting it at all
+      cover.style.visibility = op >= 1 ? 'hidden' : 'visible'
 
-      if (hintRef.current) hintRef.current.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
+      if (hint) hint.style.opacity = String(clamp(1 - op / 0.3, 0, 1))
 
       // fade the hero copy in as the keyhole opens
-      const copy = document.getElementById('kz-copy')
       if (copy) {
         const copyOp = clamp((op - 0.35) / 0.4, 0, 1)
         copy.style.opacity = String(copyOp)
-        copy.style.transform = `translateY(${(1 - copyOp) * 20}px)`
+        copy.style.transform = `translate3d(0,${((1 - copyOp) * 20).toFixed(2)}px,0)`
       }
 
       // show the navbar only once the keyhole has opened
-      const nav = document.querySelector('header') as HTMLElement | null
-      if (nav) {
-        nav.style.opacity = op >= 1 ? '1' : '0'
-        nav.style.pointerEvents = op >= 1 ? 'auto' : 'none'
-        nav.style.transition = 'opacity .4s ease'
+      const open = op >= 1
+      if (nav && open !== navOpen) {
+        navOpen = open
+        nav.style.opacity = open ? '1' : '0'
+        nav.style.pointerEvents = open ? 'auto' : 'none'
+      }
+
+      if (open && !announced) {
+        announced = true
+        window.dispatchEvent(new Event('keyhole:open'))
       }
     }
 
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    update()
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(render)
+    }
+
+    // Only re-measure when the width changes. On mobile the address bar
+    // showing/hiding fires resize with a new height on every scroll, which
+    // would otherwise make the animation jump.
+    let lastWidth = window.innerWidth
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return
+      lastWidth = window.innerWidth
+      measure()
+      lastP = -1
+      schedule()
+    }
+
+    measure()
+    render()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', onResize)
     return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', onResize)
+      if (nav) {
+        nav.style.opacity = ''
+        nav.style.pointerEvents = ''
+        nav.style.transition = ''
+      }
     }
   }, [])
 

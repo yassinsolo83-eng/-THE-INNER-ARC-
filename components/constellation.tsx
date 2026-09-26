@@ -15,8 +15,10 @@ export function Constellation() {
     let stars: { x: number; y: number; r: number; alpha: number; speed: number; dir: number }[] = []
 
     const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      canvas.width = canvas.clientWidth || window.innerWidth
+      // canvas is sized in CSS to the large viewport (h-lvh) so it still covers the
+      // screen when the mobile address bar hides; match its pixel height to that
+      canvas.height = canvas.clientHeight || window.innerHeight
       initStars()
     }
 
@@ -45,17 +47,38 @@ export function Constellation() {
       animId = requestAnimationFrame(draw)
     }
 
+    // On phones the address bar changes the window height while scrolling.
+    // Only rebuild the star field when the width really changes (rotation, desktop resize),
+    // otherwise the canvas is cleared and re-randomised mid-scroll, which looks like a flicker.
+    let lastWidth = window.innerWidth
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return
+      lastWidth = window.innerWidth
+      resize()
+    }
+
+    // Pause the loop while the tab is in the background.
+    const onVisibility = () => {
+      cancelAnimationFrame(animId)
+      if (!document.hidden) animId = requestAnimationFrame(draw)
+    }
+
     resize()
     draw()
-    window.addEventListener('resize', resize)
-    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize) }
+    window.addEventListener('resize', onResize)
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', onResize)
+      document.removeEventListener('visibilitychange', onVisibility)
+    }
   }, [])
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0"
+      className="pointer-events-none fixed left-0 top-0 z-0 h-lvh w-full"
       style={{ opacity: 0.6 }}
     />
   )

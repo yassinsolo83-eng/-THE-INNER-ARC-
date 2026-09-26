@@ -17,8 +17,20 @@ export function QuizPopup() {
       if (localStorage.getItem('quiz-completed')) return
     }
 
-    const timer = setTimeout(() => setShow(true), 3000)
-    return () => clearTimeout(timer)
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const showSoon = (ms: number) => { clearTimeout(timer); timer = setTimeout(() => setShow(true), ms) }
+
+    // On the home page, wait until the visitor has scrolled through the keyhole
+    // intro instead of interrupting it; KeyholeZoom fires `keyhole:open`.
+    const hasKeyhole = !!document.getElementById('kz-track')
+    const onOpen = () => showSoon(1500)
+    if (hasKeyhole) window.addEventListener('keyhole:open', onOpen, { once: true })
+    else showSoon(3000)
+
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('keyhole:open', onOpen)
+    }
   }, [pathname])
 
   function dismiss() {

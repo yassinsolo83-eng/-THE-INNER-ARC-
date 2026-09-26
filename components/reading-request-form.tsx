@@ -44,7 +44,7 @@ export function ReadingRequestForm({ coinBalance }: { coinBalance: number }) {
     setError(null)
 
     try {
-      const res = await fetch('/api/ai-report', {
+      const res = await fetch('/api/reading-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

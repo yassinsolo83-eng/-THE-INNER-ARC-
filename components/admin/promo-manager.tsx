@@ -174,7 +174,7 @@ export function PromoManager({ initialPromos }: { initialPromos: any[] }) {
                 dir="rtl"
                 value={descAr}
                 onChange={(e) => setDescAr(e.target.value)}
-                placeholder="أهلاً! 50 كوينز مجاناً"
+                placeholder="Arabic description…"
                 className="mt-2 w-full border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-accent focus:outline-none"
               />
             </div>

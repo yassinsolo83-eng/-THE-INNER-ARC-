@@ -2,14 +2,17 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLink, NewsletterForm, SectionHeading, Footer, Navbar } from '@/components/site'
+import { ArrowLink, NewsletterForm, SectionHeading, Footer, Navbar, ScrollToTop } from '@/components/site'
 import { Reveal } from '@/components/reveal'
 import { Constellation } from '@/components/constellation'
 import { KeyholeZoom } from '@/components/keyhole-zoom'
+import { QuizPopup } from '@/components/quiz-popup'
 
 export function HomeClient({ services, testimonials }: { services: any[]; testimonials: any[] }) {
   return (
     <>
+      <QuizPopup />
+      <ScrollToTop />
       <Constellation />
       <Navbar />
 
@@ -26,7 +29,7 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
             />
             {/* text over the video — fades in as the keyhole opens */}
             <div id="kz-copy" className="kz-copy">
@@ -45,7 +48,7 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
         {/* ── Mirror ────────────────────────────────────── */}
         <section className="relative z-10 mx-auto max-w-7xl px-6 py-10 lg:px-10 lg:py-14">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
-            <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
+            <Reveal animation="fade-up"><SectionHeading eyebrow="A different kind of reading" title="A mirror, not a map.">Tarot gives shape to the questions we carry. Through symbol, story, and a little spaciousness, it can help you notice what has been asking to be seen.</SectionHeading></Reveal>
             <Reveal animation="fade-left" delay={200}><div className="lg:justify-self-end"><ArrowLink href="/about-tarot">Learn more about tarot</ArrowLink></div></Reveal>
           </div>
         </section>
@@ -79,7 +82,7 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
         {/* ── Kind words ────────────────────────────────── */}
         <section className="relative z-10 mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
-            <Reveal animation="fade-up"><SectionHeading shimmer eyebrow="Kind words" title="A reading can become a new way of listening." /></Reveal>
+            <Reveal animation="fade-up"><SectionHeading eyebrow="Kind words" title="A reading can become a new way of listening." /></Reveal>
             <div className="grid gap-6 md:grid-cols-2">
               {testimonials.map((t, i) => (
                 <Reveal key={i} animation="fade-up" delay={i * 150}>
@@ -100,7 +103,7 @@ export function HomeClient({ services, testimonials }: { services: any[]; testim
             <div className="relative mx-auto flex min-h-[420px] max-w-7xl flex-col justify-center gap-8 px-6 py-20 lg:min-h-[500px] lg:flex-row lg:items-center lg:justify-between lg:px-10">
               <div className="max-w-lg">
                 <p className="text-xs uppercase tracking-[0.25em] text-accent">Notes from the inner arc</p>
-                <h2 className="shimmer mt-3 font-serif text-5xl leading-tight lg:text-6xl">A little perspective, occasionally.</h2>
+                <h2 className="shimmer-text mt-3 font-serif text-5xl leading-tight lg:text-6xl">A little perspective, occasionally.</h2>
                 <p className="mt-4 text-sm leading-7 text-muted-foreground">Join our mailing list for reflections, card readings, and the occasional question worth sitting with.</p>
               </div>
               <div className="w-full max-w-md"><NewsletterForm /></div>

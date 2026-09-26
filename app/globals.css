@@ -29,10 +29,16 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   max-width: 100%;
+  /* stop sideways drift on mobile; `clip` (not `hidden`) keeps position: sticky working */
+  overflow-x: clip;
+  /* disable pull-to-refresh and rubber-band bounce */
+  overscroll-behavior-y: none;
 }
 
 body {
   margin: 0;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
   background: var(--background);
   color: var(--foreground);
   font-family: 'Manrope', sans-serif;
@@ -92,15 +98,6 @@ input, textarea { font-family: inherit; }
   50%      { background-position: 100% 50%; }
 }
 
-/* ── Subtle accent pulse ───────────────────────────── */
-.pulse-accent {
-  animation: pulseGlow 3s ease-in-out infinite;
-}
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.6; }
-  50%      { opacity: 1; }
-}
-
 /* ── Eyebrow line glow ─────────────────────────────── */
 .glow-line {
   background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
@@ -135,13 +132,26 @@ input, textarea { font-family: inherit; }
   a, button { -webkit-tap-highlight-color: rgba(212,165,165,0.1); }
 }
 
+/* Fixed backgrounds are unsupported on iOS and repaint heavily on Android.
+   Fall back to a normal background on touch / small screens. */
+@media (hover: none), (max-width: 1024px) {
+  .bg-fixed { background-attachment: scroll; }
+}
+
 /* ── Keyhole zoom intro (approved) ─────────────────── */
 .kz-track { height: 400vh; position: relative; }
-.kz-stage { position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; }
+.kz-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 /* the site image behind the door */
 .kz-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 /* full-screen dark cover that zooms; the hole is punched out */
-.kz-cover { position: absolute; inset: 0; transform-origin: 50% 44%; will-change: transform, opacity; z-index: 20; }
+.kz-cover {
+  position: absolute; inset: 0; transform-origin: 50% 44%; z-index: 20;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: strict;
+}
 .kz-cover svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .kz-copy {
   position: absolute; left: 8vw; bottom: 14vh; z-index: 10; max-width: 900px;
